@@ -1,4 +1,4 @@
-
+package com.genie3.eventsLocation.models;
 
 class Place{
     public String name;

@@ -1,3 +1,5 @@
+package com.genie3.eventsLocation.models;
+
 public class User
 {
     public String pseudo;

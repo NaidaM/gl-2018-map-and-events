@@ -1,3 +1,5 @@
+package com.genie3.eventsLocation.models;
+
 import java.util.ArrayList;
 
 class Map
@@ -5,6 +7,5 @@ class Map
     public String nom;
     public String description;
     public ArrayList<Place> places;
-
 
 }
