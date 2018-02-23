@@ -23,13 +23,13 @@ public class App {
         ServerConnector connector = new ServerConnector(server);
 
         connector.setHost("0.0.0.0");
-        connector.setPort(8088);
+        connector.setPort(8080);
         connector.setIdleTimeout(30000);
         server.addConnector(connector);
 
         // Configure Jersey
         ResourceConfig rc = new ResourceConfig();
-        rc.packages(true, "com.example.jetty_jersey.ws");
+        rc.packages(true, "com.genie3.eventsLocation.ws");
         rc.register(JacksonFeature.class);
         rc.register(LoggingFilter.class);
 
