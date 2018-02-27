@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class User
 {
 
+    private int id;
     private String pseudo;
     private String email;
     private String password;
@@ -25,6 +26,13 @@ public class User
 
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
     public String getPseudo() {
         return pseudo;
     }
@@ -56,4 +64,5 @@ public class User
     public void setMaps(ArrayList<EventMap> maps) {
         this.maps = maps;
     }
+
 }

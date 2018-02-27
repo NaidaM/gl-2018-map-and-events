@@ -1,13 +1,39 @@
 package com.genie3.eventsLocation.models;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
-class Place {
+public  class Place {
 
+
+
+    private int id;
     private String name;
     private double latitude;
     private double longitude;
     private String description;
-    private String category;
     private EventMap map;
+
+
+    @JsonCreator
+    public Place( @JsonProperty("name") String name,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("latitude") double latitude,
+                  @JsonProperty("longitude") double longitude
+                  ) {
+
+        this.name = name;
+        this.description = description;
+        this.longitude = longitude;
+        this.latitude = latitude;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -41,14 +67,6 @@ class Place {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public EventMap getMap() {
         return map;
     }
@@ -64,7 +82,6 @@ class Place {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", description='" + description + '\'' +
-                ", category='" + category + '\'' +
                 ", map=" + map +
                 '}';
     }

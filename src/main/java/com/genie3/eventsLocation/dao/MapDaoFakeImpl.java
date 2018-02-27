@@ -1,6 +1,8 @@
 package com.genie3.eventsLocation.dao;
 
 
-public class MapDaoFakeImpl implements MapDaoInterface {
+import com.genie3.eventsLocation.models.EventMap;
+
+public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
 }

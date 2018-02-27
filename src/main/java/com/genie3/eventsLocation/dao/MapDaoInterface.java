@@ -1,4 +1,7 @@
 package com.genie3.eventsLocation.dao;
 
-public interface MapDaoInterface {
+import com.genie3.eventsLocation.models.EventMap;
+
+
+public interface MapDaoInterface extends CrudInterface<EventMap>{
 }

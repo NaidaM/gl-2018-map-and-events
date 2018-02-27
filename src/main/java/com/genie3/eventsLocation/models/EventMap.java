@@ -1,18 +1,32 @@
 package com.genie3.eventsLocation.models;
 
 import java.util.ArrayList;
+import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 public class EventMap
 {
+    private int id;
     private String nom;
     private String description;
     private ArrayList<Place> places;
     private User user;
 
-    public EventMap(String nom, String description, User user) {
+
+    @JsonCreator
+    public EventMap( @JsonProperty("nom") String nom,
+                     @JsonProperty("description") String description) {
         this.nom = nom;
         this.description = description;
         this.user = user;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNom() {
