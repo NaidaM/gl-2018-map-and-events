@@ -6,4 +6,7 @@ public interface UserDaoInterface extends CrudInterface<User>{
 
     User get(String pseudo);
     Boolean delete(String pseudo);
+    Boolean authenticate(String pseudo,String password);
+    String getToken(String pseudo);
+
 }

@@ -47,7 +47,7 @@ public class App {
         // Add a servlet handler for web services (/ws/*)
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(rc));
         ServletContextHandler handlerWebServices = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        handlerWebServices.setContextPath("/ws");
+        handlerWebServices.setContextPath("/api/v1");
         handlerWebServices.addServlet(servletHolder, "/*");
 
         // Add a handler for resources (/*)

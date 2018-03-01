@@ -29,15 +29,6 @@ public class UserResource {
         */
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public User create(@Valid @ValidPassword User user)  {
-
-        return null;
-       // return Dao.getUserDao().create(user);
-       // return Response.status(Response.Status.CREATED).entity(user).build();
-    }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
