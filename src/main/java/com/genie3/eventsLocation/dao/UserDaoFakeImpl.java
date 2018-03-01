@@ -10,7 +10,8 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
     }
 
     public User get(String pseudo) {
-        return null;
+
+        return new User(pseudo,pseudo+"@example.com",null,null);
     }
 
     public Boolean delete(String pseudo) {

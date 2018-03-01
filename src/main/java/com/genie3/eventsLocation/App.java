@@ -1,5 +1,7 @@
 package com.genie3.eventsLocation;
 
+import com.genie3.eventsLocation.exception.ApplicationExceptionMapper;
+import com.genie3.eventsLocation.exception.ValidationExceptionMapper;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -8,9 +10,11 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.glassfish.jersey.filter.LoggingFilter;
+//import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.server.validation.ValidationFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 public class App {
@@ -30,8 +34,15 @@ public class App {
         // Configure Jersey
         ResourceConfig rc = new ResourceConfig();
         rc.packages(true, "com.genie3.eventsLocation.ws");
+
+        rc.property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
+        rc.property(ServerProperties.BV_DISABLE_VALIDATE_ON_EXECUTABLE_OVERRIDE_CHECK, true);
+
         rc.register(JacksonFeature.class);
-        rc.register(LoggingFilter.class);
+       // rc.register(LoggingFilter.class);
+          rc.register(ApplicationExceptionMapper.class);
+         rc.register(ValidationExceptionMapper.class);
+         rc.register(ValidationFeature.class);
 
         // Add a servlet handler for web services (/ws/*)
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(rc));

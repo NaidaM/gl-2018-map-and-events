@@ -1,9 +1,12 @@
 package com.genie3.eventsLocation.ws;
 
+import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -29,8 +32,10 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User create(User user) {
-        return Dao.getUserDao().create(user);
+    public User create(@Valid @ValidPassword User user)  {
+
+        return null;
+       // return Dao.getUserDao().create(user);
        // return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
@@ -69,7 +74,7 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps")
-    public EventMap create(@PathParam("pseudo") String pseudo,EventMap map) {
+    public EventMap createMap(@PathParam("pseudo") String pseudo,EventMap map) {
 
         User u = Dao.getUserDao().get(pseudo);
         map.setUser(u);
