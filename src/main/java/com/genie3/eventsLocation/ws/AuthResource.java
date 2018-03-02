@@ -12,6 +12,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Path("/auth")
 
@@ -23,7 +24,7 @@ public class AuthResource {
 
         try {
             Dao.getUserDao().authenticate(user.getPseudo(), user.getPassword());
-            String token = Dao.getUserDao().getToken(user.getPseudo());
+            HashMap<String,String> token = Dao.getUserDao().getToken(user.getPseudo());
             return Response.status(Response.Status.OK).entity(token).build();
         }catch (DaoException.NotFoundException ex){
             Error error = new Error(ex.getMessage());

@@ -3,6 +3,9 @@ package com.genie3.eventsLocation.dao;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.User;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
 
@@ -31,7 +34,10 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
         }
     }
 
-    public String getToken(String pseudo) {
-        return "Fksds4dekkdjjjj654565";
+    public  HashMap<String,String> getToken(String pseudo) {
+        HashMap<String,String> token = new HashMap<String, String>();
+        token.put("token","Fksds4dekkdjjjj654565");
+        token.put("expire_at","2018-11-03 10:50");
+        return token;
     }
 }
