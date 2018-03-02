@@ -19,20 +19,23 @@ public class ValidationExceptionMapper implements ExceptionMapper<javax.validati
         final StringBuilder strBuilder = new StringBuilder();
         ArrayList<String> msg = new ArrayList<String>();
 
+        Response.Status status = Response.Status.BAD_REQUEST;
         try{
             for (ConstraintViolation<?> cv : ((ConstraintViolationException) e).getConstraintViolations()) {
 
                 msg.add(cv.getMessage());
             }
+
         }catch (Exception e1){
             msg.add(e.getMessage());
+            status = Response.Status.INTERNAL_SERVER_ERROR;
         }
 
 
         Collections.reverse(msg);
         Error error = new Error(msg);
         return Response
-                .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
+                .status(status.getStatusCode())
                 .type(MediaType.APPLICATION_JSON)
                 .entity(error)
                 .build();

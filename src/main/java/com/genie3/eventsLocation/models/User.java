@@ -1,13 +1,15 @@
 package com.genie3.eventsLocation.models;
 
-import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class User
 {
 
@@ -15,7 +17,7 @@ public class User
 
 
     @NotNull(message = "Pseudo field is not provide")
-    @Size(min = 6,max = 20)
+    @Size(min = 6,max = 20,message = "Pseudo size must be between 6 and 20 character")
     private String pseudo;
 
     @Email(message = "please provide a valid email")
@@ -25,23 +27,25 @@ public class User
     @NotNull(message = "Password field is not provide")
     @NotBlank(message = "password must not be blank")
     @Size(min = 6)
+    @JsonIgnore
     private String password;
 
     @NotNull(message = "Password confirmation field is not provide")
     @NotBlank(message = "password confirmation must not be blank")
+    @JsonIgnore
     private String passwordConfirmation;
 
     @JsonCreator
     public User( @JsonProperty("pseudo") String pseudo,
                  @JsonProperty("email") String email,
                  @JsonProperty("password") String password ,
-                 @JsonProperty("password_confirm") String passwordConfirmation ){
+                 @JsonProperty("confirm") String confirm){
 
         this.id = 1;
         this.pseudo=pseudo;
         this.email=email;
         this.password = password;
-        this.passwordConfirmation = passwordConfirmation;
+        this.passwordConfirmation = confirm;
 
 
     }
@@ -50,6 +54,7 @@ public class User
 
     }
 
+    @JsonIgnore
     public String getPasswordConfirmation() {
         return passwordConfirmation;
     }
@@ -78,6 +83,7 @@ public class User
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

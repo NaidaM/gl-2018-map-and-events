@@ -1,5 +1,6 @@
 package com.genie3.eventsLocation.dao;
 
+import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
 
@@ -13,11 +14,12 @@ public class Crud <T> implements CrudInterface<T> {
         return t;
     }
 
-    public List<T> read(String[] fields, String whereClause,String orderBy,Integer limit) {
+    public List<T> read(String[] fields, String whereClause,String orderBy,Integer limit)
+    {
         return null;
     }
 
-    public T get(int id) {
+    public T get(int id) throws DaoException.NotFoundException {
         return null;
     }
 

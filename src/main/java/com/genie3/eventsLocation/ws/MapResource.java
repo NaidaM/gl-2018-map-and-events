@@ -1,6 +1,8 @@
 package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
 import com.genie3.eventsLocation.models.User;
@@ -17,9 +19,16 @@ public class MapResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
-    public EventMap get(@PathParam("pseudo") int mapId) {
+    public Response get(@PathParam("pseudo") int mapId) {
 
-        return Dao.getMapDao().get(mapId);
+        try {
+            EventMap map =  Dao.getMapDao().get(mapId);
+            return Response.status(Response.Status.CREATED).entity(map).build();
+        }catch (DaoException.NotFoundException ex){
+
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        }
+
 
     }
 
@@ -45,9 +54,17 @@ public class MapResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{map_id}/places")
-    public Place createPlace(@PathParam("map_id") int mapId,Place place) {
+    public Response createPlace(@PathParam("map_id") int mapId,Place place) {
         place.getMap().setId(mapId);
-       return Dao.getPlaceDao().create(place);
+        try {
+            Place p = Dao.getPlaceDao().create(place);
+            return Response.status(Response.Status.CREATED).entity(p).build();
+        }catch (DaoException.DaoInternalError ex){
+
+            return Response.status(Response.Status.UNAUTHORIZED).entity(ex.getMessage()).build();
+        }
+
+
     }
 
 

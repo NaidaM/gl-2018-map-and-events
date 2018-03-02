@@ -1,5 +1,6 @@
 package com.genie3.eventsLocation.dao;
 
+import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.User;
 
 
@@ -18,7 +19,7 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
         return true;
     }
 
-    public Boolean authenticate(String pseudo, String password) {
+    public Boolean authenticate(String pseudo, String password) throws DaoException.NotFoundException {
         if((pseudo.equals("yannis") && password.equals("password"))
                 || (pseudo.equals("eric") && password.equals("password"))
                 || (pseudo.equals("naida") && password.equals("password"))
@@ -26,7 +27,7 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
                 || (pseudo.equals("imed") && password.equals("password") )){
             return true;
         }else {
-            return false;
+            throw new DaoException.NotFoundException("Authentification failed");
         }
     }
 

@@ -2,6 +2,7 @@ package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
 
@@ -18,9 +19,16 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}")
-    public User get(@PathParam("pseudo") String pseudo) {
+    public Response get(@PathParam("pseudo") String pseudo) {
 
-        return Dao.getUserDao().get(pseudo);
+        try {
+            User u =  Dao.getUserDao().get(pseudo);
+            return Response.status(Response.Status.CREATED).entity(u).build();
+        }catch (DaoException.NotFoundException ex){
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        }
+
+
 
         /*
         *   return Response.status(Response.Status.OK).entity(user).build();
@@ -55,21 +63,38 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps")
-    public List<EventMap> getMaps(@PathParam("pseudo") String pseudo) {
+    public Response getMaps(@PathParam("pseudo") String pseudo) {
 
-        User u = Dao.getUserDao().get(pseudo);
-        return Dao.getMapDao().read(null,"user_id = "+u.getId(),null,20);
+        try {
+            User u =  Dao.getUserDao().get(pseudo);
+            List<EventMap> maps =  Dao.getMapDao().read(null,"user_id = "+u.getId(),null,20);
+            return Response.status(Response.Status.OK).entity(maps).build();
+        }catch (DaoException.NotFoundException ex){
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        }
+
+
 
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps")
-    public EventMap createMap(@PathParam("pseudo") String pseudo,EventMap map) {
+    public Response createMap(@PathParam("pseudo") String pseudo,EventMap map) {
 
-        User u = Dao.getUserDao().get(pseudo);
-        map.setUser(u);
-        return Dao.getMapDao().create(map);
+        try {
+            User u =  Dao.getUserDao().get(pseudo);
+            map.setUser(u);
+            EventMap eventMap =  Dao.getMapDao().create(map);
+            return Response.status(Response.Status.CREATED).entity(eventMap).build();
+        }catch (DaoException.NotFoundException ex){
+            return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+        }catch (DaoException.DaoInternalError ex){
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+        }
+
+
+
 
     }
 

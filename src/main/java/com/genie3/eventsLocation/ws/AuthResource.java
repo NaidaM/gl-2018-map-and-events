@@ -1,21 +1,17 @@
 package com.genie3.eventsLocation.ws;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.Error;
-import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
-import org.codehaus.jackson.annotate.JsonProperty;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.List;
 
 @Path("/auth")
 
@@ -25,13 +21,13 @@ public class AuthResource {
     @Path("/login")
     public Response get(@AttemptAuthUser User user) {
 
-        if(Dao.getUserDao().authenticate(user.getPseudo(),user.getPassword())){
-           String token =  Dao.getUserDao().getToken(user.getPseudo());
+        try {
+            Dao.getUserDao().authenticate(user.getPseudo(), user.getPassword());
+            String token = Dao.getUserDao().getToken(user.getPseudo());
             return Response.status(Response.Status.OK).entity(token).build();
-        }else {
-            ArrayList<String> m = new ArrayList<String>();
-            m.add("Authentification failed");
-            Error error = new Error(m);
+        }catch (DaoException.NotFoundException ex){
+            Error error = new Error(ex.getMessage());
+
             return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
         }
 
@@ -48,9 +44,15 @@ public class AuthResource {
     @Path("/register")
     public Response create(@Valid @ValidPassword User user)  {
 
-        // Penser à mettre les exception
-        User user1 = Dao.getUserDao().create(user);
-        return Response.status(Response.Status.CREATED).entity(user1).build();
+        try {
+            User user1 = Dao.getUserDao().create(user);
+            return Response.status(Response.Status.CREATED).entity(user1).build();
+        }catch (DaoException.DaoInternalError ex){
+
+            Error error = new Error(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+        }
+
     }
 
 }
