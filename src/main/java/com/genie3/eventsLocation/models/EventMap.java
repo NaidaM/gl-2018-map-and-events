@@ -1,24 +1,48 @@
 package com.genie3.eventsLocation.models;
 
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class EventMap
 {
+
     private int id;
-    private String nom;
+
+    @NotNull(message = "Name field is not provide")
+    @NotBlank(message = "Name must not be blank")
+    private String  name;
+
+    @NotNull(message = "Description field is not provide")
     private String description;
-    private ArrayList<Place> places;
+
+
+    private ArrayList<Place> places ;
+
+
     private User user;
 
 
     @JsonCreator
-    public EventMap( @JsonProperty("nom") String nom,
+    public EventMap( @JsonProperty("name") String name,
                      @JsonProperty("description") String description) {
-        this.nom = nom;
+        this.name = name;
         this.description = description;
-        this.user = user;
+        this.places = new ArrayList<Place>();
+
+    }
+
+    public EventMap() {
+        this.places = new ArrayList<Place>();
     }
 
     public int getId() {
@@ -29,12 +53,12 @@ public class EventMap
         this.id = id;
     }
 
-    public String getNom() {
-        return nom;
+    public String getName() {
+        return name;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
+    public void setName(String nom) {
+        this.name = nom;
     }
 
     public String getDescription() {
@@ -53,11 +77,13 @@ public class EventMap
         this.places = places;
     }
 
+    @Valid
     public User getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+
+    public void setUser(@Valid User user) {
         this.user = user;
     }
 }

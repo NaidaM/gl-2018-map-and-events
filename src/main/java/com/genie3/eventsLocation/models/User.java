@@ -1,15 +1,15 @@
 package com.genie3.eventsLocation.models;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User
 {
 
@@ -35,6 +35,9 @@ public class User
     @JsonIgnore
     private String passwordConfirmation;
 
+    @JsonIgnore
+    private ArrayList<EventMap> maps;
+
     @JsonCreator
     public User( @JsonProperty("pseudo") String pseudo,
                  @JsonProperty("email") String email,
@@ -46,12 +49,13 @@ public class User
         this.email=email;
         this.password = password;
         this.passwordConfirmation = confirm;
+        maps = new ArrayList<EventMap>();
 
 
     }
 
     public User(){
-
+        maps = new ArrayList<EventMap>();
     }
 
     @JsonIgnore
@@ -92,4 +96,15 @@ public class User
         this.password = password;
     }
 
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
+    }
+
+    public ArrayList<EventMap> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(ArrayList<EventMap> maps) {
+        this.maps = maps;
+    }
 }

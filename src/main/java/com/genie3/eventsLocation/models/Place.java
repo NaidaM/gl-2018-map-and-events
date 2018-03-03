@@ -1,31 +1,64 @@
 package com.genie3.eventsLocation.models;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonCreator;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
+
+@JsonIgnoreProperties(ignoreUnknown=true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public  class Place {
 
 
 
     private int id;
+
+    @NotNull(message = "Name field must be provide")
+    @NotBlank(message = "Provide a name for a place")
     private String name;
-    private double latitude;
-    private double longitude;
+
+    @NotNull(message = "Latitude must be provide")
+    @Pattern(regexp = "^[0-9]+(.[0-9]+)?$+",message = "Latitude must be a number")
+    private String latitude;
+
+    @NotNull(message = "Longitude must be provide")
+    @Pattern(regexp = "^[0-9]+(.[0-9]+)?$",message = "Longitude must be a number")
+    private String longitude;
+
+    @NotNull
+    @NotBlank
     private String description;
+
+    @JsonIgnore
     private EventMap map;
 
 
     @JsonCreator
     public Place( @JsonProperty("name") String name,
                   @JsonProperty("description") String description,
-                  @JsonProperty("latitude") double latitude,
-                  @JsonProperty("longitude") double longitude
+                  @JsonProperty("latitude") String latitude,
+                  @JsonProperty("longitude") String longitude
                   ) {
 
         this.name = name;
         this.description = description;
-        this.longitude = longitude;
+        this.longitude =longitude;
         this.latitude = latitude;
+        this.map = null;
     }
+
+    public Place() {
+        this.map = null;
+    }
+
 
     public int getId() {
         return id;
@@ -43,19 +76,19 @@ public  class Place {
         this.name = name;
     }
 
-    public double getLatitude() {
+    public String getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
-    public double getLongitude() {
+    public String getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 

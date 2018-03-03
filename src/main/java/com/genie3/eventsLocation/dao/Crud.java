@@ -23,12 +23,13 @@ public class Crud <T> implements CrudInterface<T> {
         return null;
     }
 
-    public T update(T t) {
+    public T update(T t) throws DaoException.DaoInternalError {
         return t;
     }
 
-    public Boolean delete(int t) {
+    public Boolean delete(int t)  throws DaoException.DaoInternalError {
         //Make some action
+        // If ok return true else throw Internal exception
         return true;
     }
 

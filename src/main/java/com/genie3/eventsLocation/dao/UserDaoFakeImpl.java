@@ -3,6 +3,7 @@ package com.genie3.eventsLocation.dao;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.User;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,9 +14,15 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
 
     }
 
-    public User get(String pseudo) {
+    @Valid
+    public User get(String pseudo) throws DaoException.NotFoundException{
 
-        return new User(pseudo,pseudo+"@example.com",null,null);
+        User u = new User(pseudo,pseudo+"@example.com",null,null);
+
+        if (u == null){
+            throw new DaoException.NotFoundException("User not Found");
+        }
+        return u;
     }
 
     public Boolean delete(String pseudo) {
