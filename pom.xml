@@ -120,6 +120,17 @@
 			<artifactId>jersey-hk2</artifactId>
 			<version>2.26</version>
 		</dependency>
+		
+		<dependency>
+    		  <groupId>org.elasticsearch.client</groupId>
+    		  <artifactId>transport</artifactId>
+    		  <version>6.2.1</version>
+		</dependency>
+		<dependency>
+    		  <groupId>org.apache.logging.log4j</groupId>
+    		  <artifactId>log4j-to-slf4j</artifactId>
+    		  <version>2.9.1</version>
+		</dependency>
 	</dependencies>
 
 
