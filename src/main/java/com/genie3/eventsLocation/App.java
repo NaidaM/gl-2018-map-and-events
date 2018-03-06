@@ -12,6 +12,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 //import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.server.validation.ValidationFeature;
@@ -43,6 +44,7 @@ public class App {
           rc.register(ApplicationExceptionMapper.class);
          rc.register(ValidationExceptionMapper.class);
          rc.register(ValidationFeature.class);
+         rc.register(MultiPartFeature.class);
 
         // Add a servlet handler for web services (/ws/*)
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(rc));
