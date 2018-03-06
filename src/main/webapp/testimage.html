@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+        <meta content="utf-8" http-equiv="encoding" />
+ 
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        <script type="text/javascript">
+ 
+        $(document).ready(function()
+        {
+            $("#uploadBtn").click(function()
+            {
+                $('input[name="file"]').each(function(index, value)
+                {
+                    var file = value.files[0];
+                    if(file)
+                    {
+                        var formData = new FormData();
+                        formData.append('file', file);
+                        $.ajax({
+                          url : '/api/v1/upload/image',
+                          type : 'POST',
+                          data : formData,
+                          cache : false,
+                          contentType : false,
+                          processData : false,
+                          success : function(data, textStatus, jqXHR) {
+                                var message = jqXHR.responseText;
+                                $("#messages").append("<li>" + message + "</li>");
+                          },
+                          error : function(jqXHR, textStatus, errorThrown) {
+                                $("#messages").append("<li style='color: red;'>" + textStatus + "</li>");
+                          }
+                        });
+                    }
+                });
+            });
+        });
+        </script>
+</head>
+<body>
+    <h1>Exemple pour tester le chargement des image</h1>
+ 
+    <form action="/upload/image" method="post" enctype="multipart/form-data">
+ 
+        <p>
+            Select file 1: <input type="file" name="file" size="45" />
+        </p>
+        <p>
+            Select file 2: <input type="file" name="file" size="45" />
+        </p>
+        <p>
+            Select file 3: <input type="file" name="file" size="45"  />
+        </p>
+        <p>
+            <input id="uploadBtn" type="button" value="Upload jpg Files" />
+        </p>
+ 
+    </form>
+     
+    <ul id="messages">   
+    </ul>
+ 
+</body>
+</html>
