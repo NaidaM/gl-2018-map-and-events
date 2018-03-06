@@ -16,7 +16,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 public class ImageImpl implements ImageInterface {
     
-	 private static String UPLOAD_PATH = "/home/EventLoc";
+     private static String UPLOAD_PATH = "/home/pk/EventLoc/"; //changer le path : remplacer pk par votre nom de votre ordi 
 	
 	public Response  upload(InputStream fileInputStream,FormDataContentDisposition fileMetaData) {
 		try
@@ -29,6 +29,7 @@ public class ImageImpl implements ImageInterface {
             {
                 out.write(bytes, 0, read);
             }
+            System.out.println("--- name: " + fileMetaData.getFileName());
             out.flush();
             out.close();
         } catch (IOException e)
