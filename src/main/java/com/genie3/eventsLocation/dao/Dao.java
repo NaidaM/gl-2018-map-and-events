@@ -13,5 +13,7 @@ public final class Dao {
     public static PlaceDaoInterface getPlaceDao(){
         return new PlaceDaoFakeImpl();
     }
+     public static ImageInterface getImageDAO(){
+        return new ImageImpl();
+    }
 }
-
