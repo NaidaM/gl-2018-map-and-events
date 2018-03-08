@@ -8,6 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -17,6 +18,8 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.elasticsearch.rest.RestStatus;
+import com.genie3.eventsLocation.models.User;
 
 
 public class Database {
@@ -78,7 +81,7 @@ public class Database {
 		
 		
 	}
-	public static Map<String, Object> getUser(String name) throws UnknownHostException{
+	public static User getUser(String name) throws UnknownHostException{
 		TransportClient cl = getClient();
 		TermQueryBuilder qb= new TermQueryBuilder("pseudo", name);
 		SearchResponse res= cl.prepareSearch("project")
@@ -88,10 +91,23 @@ public class Database {
 		SearchHit[] searchHit= res.getHits().getHits();
 		if(searchHit.length == 0)
 			return null;
-		
-		return searchHit[0].getSourceAsMap();
+		Map<String, Object> map =searchHit[0].getSourceAsMap();
+		User user = new User();
+		user.setId(searchHit[0].docId());
+		user.setEmail((String) map.get("email"));
+		user.setPseudo(name);
+		user.setToken((String)map.get("token"));
+		return user;
 	}
+	public static boolean delateUser(String id)throws UnknownHostException {
 	
+		TransportClient cl = getClient();
+		TermQueryBuilder qb= new TermQueryBuilder("id", id);
+		DeleteResponse del = cl.prepareDelete("project","user", id).get();
+		return del.status().equals(RestStatus.OK);
+			
+		
+	}
 	
 	
 }
