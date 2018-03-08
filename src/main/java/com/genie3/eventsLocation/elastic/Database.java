@@ -8,11 +8,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
 
-<<<<<<< HEAD
 import org.elasticsearch.action.delete.DeleteResponse;
-=======
 import com.genie3.eventsLocation.models.User;
->>>>>>> upload multiple files
+
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
