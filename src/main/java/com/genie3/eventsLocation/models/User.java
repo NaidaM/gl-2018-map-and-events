@@ -3,6 +3,7 @@ package com.genie3.eventsLocation.models;
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -42,6 +43,14 @@ public class User
 
     @NotNull(message = "Role  field is not provide")
     private String role;
+    
+    public static String HashPssd (String password) {
+    	return BCrypt.hashpw(password, BCrypt.gensalt(15));
+    }
+    
+    public static boolean checkpassd(String password, String hash) {
+    	 return BCrypt.checkpw(password, hash);
+    }
 
     @JsonCreator
     public User( @JsonProperty("pseudo") String pseudo,

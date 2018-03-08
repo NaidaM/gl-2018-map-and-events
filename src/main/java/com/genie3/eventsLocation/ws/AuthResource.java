@@ -3,6 +3,7 @@ package com.genie3.eventsLocation.ws;
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.elastic.Database;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.filters.AuthentificationFilter;
 import com.genie3.eventsLocation.filters.TokenSecurity;
@@ -14,6 +15,8 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import java.net.UnknownHostException;
 import java.util.HashMap;
 
 @Path("/auth")
@@ -75,6 +78,19 @@ public class AuthResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
 
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/ExistPseudo)")
+    public boolean ExistPseudo(String Pseudo) {
+    	try {
+			return Database.ExistPseudo(Pseudo);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
     }
 
 }

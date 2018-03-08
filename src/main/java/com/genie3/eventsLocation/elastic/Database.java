@@ -7,12 +7,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.elasticsearch.action.delete.DeleteResponse;
 import com.genie3.eventsLocation.models.User;
 
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -20,6 +22,7 @@ import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import org.mindrot.jbcrypt.BCrypt;
 import org.elasticsearch.rest.RestStatus;
 import com.genie3.eventsLocation.models.User;
 
@@ -46,7 +49,7 @@ public class Database {
 			    .startObject()
 			        .field("pseudo", user.getPseudo())
 			        .field("email", user.getEmail())
-			        .field("password", user.getPassword())
+			        .field("password", HashPssd(user.getPassword()))
 			        .field("token", user.getToken())
 			        .field("role", user.getRole())
 			    .endObject();
@@ -82,8 +85,19 @@ public class Database {
 	
 	public static void createMap(String nom,
 			String description) {
-		
-		
+	}
+	
+	public static void setToken(String id, String token) throws InterruptedException, ExecutionException, IOException {
+		UpdateRequest updateRequest = new UpdateRequest();
+		updateRequest.index("project");
+		updateRequest.type("user");
+		updateRequest.id(""+id);
+
+		updateRequest.doc(jsonBuilder()
+			        .startObject()
+			            .field("token", token)
+			        .endObject());
+		client.update(updateRequest).get();
 	}
 	public static User getUser(String name) throws UnknownHostException{
 		TransportClient cl = getClient();
@@ -114,5 +128,26 @@ public class Database {
 		
 	}
 	
+	public static boolean ExistPseudo(String Pseudo) throws UnknownHostException {
+		TransportClient cl = getClient();
+		TermQueryBuilder qb= new TermQueryBuilder("pseudo", Pseudo);
+		SearchResponse res= cl.prepareSearch("project")
+				.setTypes("user")
+				.setQuery(qb)
+				.get();
+		SearchHit[] searchHit= res.getHits().getHits();
+		if(searchHit.length == 0)
+			return false;
+		else
+			return true;
+	}
 	
+	 public static String HashPssd (String password) {
+	    	return BCrypt.hashpw(password, BCrypt.gensalt(15));
+	    }
+	    
+	    public static boolean checkpassd(String password, String hash) {
+	    	 return BCrypt.checkpw(password, hash);
+	    }
+
 }
