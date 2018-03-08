@@ -9,8 +9,8 @@ import com.genie3.eventsLocation.models.User;
 
 public class UserDao  {
 
-	public void createUser(String pseudo, String email, String password) throws UnknownHostException, IOException {
-		Database.createUser(pseudo, email, password);
+	public void create(User user) throws UnknownHostException, IOException {
+		Database.createUser(user);
 	}
 	
 	public User getUser(String pseudo) throws UnknownHostException{

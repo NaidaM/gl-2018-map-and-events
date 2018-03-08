@@ -1,9 +1,11 @@
 package com.genie3.eventsLocation.dao;
 
+import com.genie3.eventsLocation.elastic.Database;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.User;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +13,19 @@ import java.util.Map;
 public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
 
     public UserDaoFakeImpl() {
+
+    }
+
+
+    @Override
+    public User create(User user)  throws DaoException.DaoInternalError {
+
+        try {
+            Database.createUser(user);
+            return user;
+        }catch (IOException ex){
+            throw new DaoException.DaoInternalError("Something goes wrong");
+        }
 
     }
 

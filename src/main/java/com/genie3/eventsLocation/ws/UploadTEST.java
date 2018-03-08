@@ -2,7 +2,8 @@ package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.Dao;
 
-import java.io.InputStream; 
+import java.io.InputStream;
+import java.util.List;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,7 +13,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
- 
+
+import org.glassfish.jersey.media.multipart.BodyPartEntity;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -21,12 +24,40 @@ public class UploadTEST {
     @POST
     @Path("/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response uploadImage(  @FormDataParam("file") InputStream fileInputStream,
-                                    @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception
+    public Response uploadImage(  @FormDataParam("file") List<FormDataBodyPart> bodyParts
+                                  ) throws Exception
     {
-        return Dao.getImageDAO().upload(fileInputStream, fileMetaData);
+
+			for (int i = 0; i< bodyParts.size();i++){
+				BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
+				String fileName = bodyParts.get(i).getContentDisposition().getFileName();
+
+
+
+
+				Dao.getImageDAO().upload(bodyPartEntity.getInputStream(), fileName);
+			}
+
+
+
+		return Response.status(Response.Status.OK).entity("Ok").build();
     }
-	
+    /*@POST
+    @Path("/image")
+    @Consumes({MediaType.MULTIPART_FORM_DATA})
+    public Response uploadImage(  @FormDataParam("file") InputStream fileInputStream[],
+                                    @FormDataParam("file") FormDataContentDisposition fileMetaData[]) throws Exception
+    {
+
+			for (int i = 0; i< fileInputStream.length;i++){
+				Dao.getImageDAO().upload(fileInputStream[i], fileMetaData[i]);
+			}
+
+
+
+		return Response.status(Response.Status.NOT_FOUND).entity("Ok").build();
+    }*/
+
 	@GET
 	@Path("/download")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)

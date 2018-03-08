@@ -10,7 +10,7 @@ public class Crud <T> implements CrudInterface<T> {
 
 
 
-    public T create(T t) {
+    public T create(T t) throws DaoException.DaoInternalError {
         return t;
     }
 

@@ -8,7 +8,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
 
+<<<<<<< HEAD
 import org.elasticsearch.action.delete.DeleteResponse;
+=======
+import com.genie3.eventsLocation.models.User;
+>>>>>>> upload multiple files
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.transport.TransportClient;
@@ -37,14 +41,16 @@ public class Database {
 		return client;
 	}
 	
-	public static void createUser(String pseudo, String email, String password) 
-			throws UnknownHostException, IOException {
+	public static void createUser(User user)
+			throws  IOException {
 		TransportClient cl= getClient();
 		XContentBuilder builder = jsonBuilder()
 			    .startObject()
-			        .field("pseudo", pseudo)
-			        .field("email", email)
-			        .field("password", password)
+			        .field("pseudo", user.getPseudo())
+			        .field("email", user.getEmail())
+			        .field("password", user.getPassword())
+			        .field("token", user.getToken())
+			        .field("role", user.getRole())
 			    .endObject();
 		
 		cl.prepareIndex("project", "user")
@@ -98,6 +104,7 @@ public class Database {
 		user.setPseudo(name);
 		user.setToken((String)map.get("token"));
 		return user;
+
 	}
 	public static boolean delateUser(String id)throws UnknownHostException {
 	

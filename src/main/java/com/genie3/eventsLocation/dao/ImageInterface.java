@@ -9,7 +9,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 public interface ImageInterface {
 
-    public Response  upload(InputStream fileInputStream,FormDataContentDisposition fileMetaData);
+    public Response  upload(InputStream fileInputStream,String filename);
 	public Response download(String fileName);
 	public ArrayList<String> Images();
 	

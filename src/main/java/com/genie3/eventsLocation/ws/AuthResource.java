@@ -66,6 +66,7 @@ public class AuthResource {
     public Response create(@Valid @ValidPassword User user)  {
 
         try {
+            user.setRole("user");
             User user1 = Dao.getUserDao().create(user);
             return Response.status(Response.Status.CREATED).entity(user1).build();
         }catch (DaoException.DaoInternalError ex){

@@ -17,27 +17,28 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 public class ImageImpl implements ImageInterface {
     
 
-	 private static String UPLOAD_PATH = "/home/yannis/EventLoc";
+	 private static String UPLOAD_PATH = "/home/yannis/EventLoc/";
 	
-	public Response  upload(InputStream fileInputStream,FormDataContentDisposition fileMetaData) {
+	public Response  upload(InputStream fileInputStream,String filename) {
 		try
         {
+
             int read = 0;
             byte[] bytes = new byte[1024];
  
-            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + fileMetaData.getFileName()));
+            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + filename));
             while ((read = fileInputStream.read(bytes)) != -1)
             {
                 out.write(bytes, 0, read);
             }
-            System.out.println("--- name: " + fileMetaData.getFileName());
+            System.out.println("--- name: " + filename);
             out.flush();
             out.close();
         } catch (IOException e)
         {
             throw new WebApplicationException("Error while uploading file. Please try again !!");
         }
-        return Response.ok(fileMetaData.getFileName() + " uploaded successfully !!").build();
+        return Response.ok(filename + " uploaded successfully !!").build();
     
 	}
 
