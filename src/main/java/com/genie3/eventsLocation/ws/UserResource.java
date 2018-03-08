@@ -7,6 +7,8 @@ import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
 import com.genie3.eventsLocation.models.User;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -21,6 +23,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}")
+    @RolesAllowed({"user"})
     public Response get(@PathParam("pseudo") String pseudo) {
 
         try {
@@ -59,6 +62,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}")
+    @RolesAllowed({"user"})
     public Response delete(@PathParam("pseudo") String pseudo) {
         if(Dao.getUserDao().delete(pseudo)){
             return Response.status(Response.Status.OK).build();
@@ -71,6 +75,7 @@ public class UserResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps")
+    @RolesAllowed({"user"})
     public Response getMaps(@PathParam("pseudo") String pseudo) {
 
 
@@ -87,6 +92,7 @@ public class UserResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps")
+    @RolesAllowed({"user"})
     public Response createMap(@PathParam("pseudo") String pseudo,@Valid EventMap map) {
 
         try {
@@ -113,6 +119,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps/{map_id}")
+    @RolesAllowed({"user"})
     public Response updateMap(@PathParam("pseudo") String pseudo,
                               @PathParam("map_id") int mapIp,@Valid EventMap map) {
 
@@ -131,6 +138,7 @@ public class UserResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{pseudo}/maps/{map_id}")
+    @RolesAllowed({"user"})
     public Response delete(@PathParam("pseudo") String pseudo,
                            @PathParam("map_id") int mapIp) {
 

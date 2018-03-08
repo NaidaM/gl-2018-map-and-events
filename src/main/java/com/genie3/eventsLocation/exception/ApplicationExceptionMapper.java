@@ -9,6 +9,7 @@ import javax.ws.rs.ext.Provider;
 public class ApplicationExceptionMapper implements ExceptionMapper<Exception> {
 
     public Response toResponse(Exception e) {
+        //e.printStackTrace();
         return Response
                 .status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode())
                 .type(MediaType.TEXT_PLAIN)

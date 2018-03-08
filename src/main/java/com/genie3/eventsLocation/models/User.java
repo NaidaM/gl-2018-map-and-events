@@ -37,6 +37,11 @@ public class User
 
     @JsonIgnore
     private ArrayList<EventMap> maps;
+    @JsonIgnore
+    private String token;
+
+    @NotNull(message = "Role  field is not provide")
+    private String role;
 
     @JsonCreator
     public User( @JsonProperty("pseudo") String pseudo,
@@ -50,12 +55,16 @@ public class User
         this.password = password;
         this.passwordConfirmation = confirm;
         maps = new ArrayList<EventMap>();
+        this.token = "";
+        this.role = "anonymous";
 
 
     }
 
     public User(){
         maps = new ArrayList<EventMap>();
+        this.token = "";
+        this.role = "anonymous";
     }
 
     @JsonIgnore
@@ -106,5 +115,21 @@ public class User
 
     public void setMaps(ArrayList<EventMap> maps) {
         this.maps = maps;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

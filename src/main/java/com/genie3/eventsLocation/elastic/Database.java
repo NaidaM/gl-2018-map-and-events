@@ -30,8 +30,7 @@ public class Database {
 		if(client == null)
 			client = new PreBuiltTransportClient(Settings.EMPTY)
 	        .addTransportAddress(new TransportAddress(InetAddress.getByName("127.0.0.1"), 9300));
-		
-		
+
 		return client;
 	}
 	

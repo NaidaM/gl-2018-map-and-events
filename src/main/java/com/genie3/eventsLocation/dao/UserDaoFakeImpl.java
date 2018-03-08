@@ -14,11 +14,26 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
 
     }
 
+    @Override
+    public User get(int id) throws DaoException.NotFoundException{
+
+        User u = new User("pseudo","example@example.com",null,null);
+        // just for the test
+        u.setRole("user");
+        u.setId(1);
+        if (u == null){
+            throw new DaoException.NotFoundException("User not Found");
+        }
+        return u;
+    }
+
     @Valid
     public User get(String pseudo) throws DaoException.NotFoundException{
 
         User u = new User(pseudo,pseudo+"@example.com",null,null);
-
+        //Just for the test
+        u.setRole("user");
+        u.setId(1);
         if (u == null){
             throw new DaoException.NotFoundException("User not Found");
         }

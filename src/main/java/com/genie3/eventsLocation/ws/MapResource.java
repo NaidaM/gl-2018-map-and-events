@@ -5,6 +5,7 @@ import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
 
+import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -18,6 +19,7 @@ public class MapResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
+    @PermitAll
     public Response get(@PathParam("pseudo") int mapId) {
 
         try {
@@ -36,6 +38,7 @@ public class MapResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @PermitAll
     public List<EventMap> getAll() {
         
         return Dao.getMapDao().read(null,null,null,null);
@@ -55,6 +58,7 @@ public class MapResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{map_id}/places")
+    @PermitAll
     public Response createPlace(@PathParam("map_id") int mapId,@Valid Place place) {
         //place.getMap().setId(mapId);
         try {
@@ -73,6 +77,7 @@ public class MapResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{map_id}/places/{place_id}")
+    @PermitAll
     public Response updatePlace(@PathParam("map_id") int mapId,
                                 @PathParam("place_id") int placeId,@Valid Place place) {
         place.setId(placeId);

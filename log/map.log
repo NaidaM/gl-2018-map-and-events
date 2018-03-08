@@ -1,0 +1,203 @@
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp876606457-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1844736991-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - java.lang.NullPointerException
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1051479655-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - java.lang.NullPointerException
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp567861339-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - java.lang.NullPointerException
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp285976345-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp798253747-30 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1468218810-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1421641955-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1088364656-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 1 - /home/yannis/Bureau/Master1/S2/GL/gl-2018-map-and-events/key/events_map
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp567861339-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 1 - /key/events_map.pub
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp2144238104-30 com.genie3.eventsLocation.filters.AuthentificationFilter - 1 - java.security.InvalidKeyException: IOException : algid parse error, not a sequence
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1088364656-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 1 - java.security.InvalidKeyException: IOException : algid parse error, not a sequence
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp2104427769-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1312450874-28 com.genie3.eventsLocation.filters.AuthentificationFilter - 0 - null
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp580465384-29 com.genie3.eventsLocation.filters.AuthentificationFilter - 1 - Only RSAPublicKeySpec and X509EncodedKeySpec supported for RSA public keys
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1472787740-32 com.genie3.eventsLocation.filters.AuthentificationFilter - Token expired!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp614304978-31 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+WARN qtp614304978-33 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp802866901-33 com.genie3.eventsLocation.filters.AuthentificationFilter - No token provided!
+WARN qtp802866901-35 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+WARN qtp802866901-29 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+WARN qtp802866901-28 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1696779774-29 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+WARN qtp1696779774-28 com.genie3.eventsLocation.filters.AuthentificationFilter - Token expired!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp1477355154-32 com.genie3.eventsLocation.filters.AuthentificationFilter - No token provided!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp580465384-29 com.genie3.eventsLocation.filters.AuthentificationFilter - No token provided!
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+DEBUG com.genie3.eventsLocation.App.main() org.jboss.logging - Logging Provider: org.jboss.logging.Log4jLoggerProvider
+INFO com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.util.Version - HV000001: Hibernate Validator 5.1.3.Final
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.engine.resolver.DefaultTraversableResolver - Cannot find javax.persistence.Persistence on classpath. Assuming non JPA 2 environment. All properties will per default be traversable.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - Trying to load META-INF/validation.xml for XML based Validator configuration.
+DEBUG com.genie3.eventsLocation.App.main() org.hibernate.validator.internal.xml.ValidationXmlParser - No META-INF/validation.xml found. Using annotation based configuration only.
+WARN qtp365866174-29 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
+WARN qtp365866174-33 com.genie3.eventsLocation.filters.AuthentificationFilter - Invalid token provided!
