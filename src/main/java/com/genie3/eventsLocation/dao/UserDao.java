@@ -13,11 +13,5 @@ public class UserDao  {
 		Database.createUser(user);
 	}
 	
-	public User getUser(String pseudo) throws UnknownHostException{
-		
-		Map<String, Object> data=Database.getUser(pseudo);
-		String email= (String) data.get("email");
-		String password= (String) data.get("password");
-		return new User(pseudo, email, password, null);
-	}
+
 }

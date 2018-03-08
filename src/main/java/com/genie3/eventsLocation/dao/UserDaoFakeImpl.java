@@ -55,8 +55,14 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
         return u;
     }
 
-    public Boolean delete(String pseudo) {
-        return true;
+    public Boolean delete(String id) {
+
+        try {
+            return Database.delateUser(id);
+        }catch (IOException ex){
+            return false;
+        }
+
     }
 
     public Boolean authenticate(String pseudo, String password) throws DaoException.NotFoundException {
