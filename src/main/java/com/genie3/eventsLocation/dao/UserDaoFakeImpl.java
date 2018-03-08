@@ -3,6 +3,7 @@ package com.genie3.eventsLocation.dao;
 import com.genie3.eventsLocation.elastic.Database;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.User;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
         User u = new User("pseudo","example@example.com",null,null);
         // just for the test
         u.setRole("user");
-        u.setId(1);
+        u.setId("1");
         if (u == null){
             throw new DaoException.NotFoundException("User not Found");
         }
@@ -43,30 +44,71 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
     }
 
     @Valid
-    public User get(String pseudo) throws DaoException.NotFoundException{
+    public User getWithId(String id) throws DaoException.NotFoundException{
 
-        User u = new User(pseudo,pseudo+"@example.com",null,null);
+       /* User u = new User(pseudo,pseudo+"@example.com",null,null);
         //Just for the test
         u.setRole("user");
         u.setId(1);
         if (u == null){
             throw new DaoException.NotFoundException("User not Found");
         }
-        return u;
+        return u;*/
+        try {
+            return  Database.getUserWithId(id);
+        }catch (IOException ex){
+            return null;
+        }
+
     }
 
-    public Boolean delete(String id) {
+    @Valid
+    public User getWithPseudo(String pseudo) throws DaoException.NotFoundException{
+
+       /* User u = new User(pseudo,pseudo+"@example.com",null,null);
+        //Just for the test
+        u.setRole("user");
+        u.setId(1);
+        if (u == null){
+            throw new DaoException.NotFoundException("User not Found");
+        }
+        return u;*/
+        try {
+            return  Database.getUserWithPseudo(pseudo);
+        }catch (IOException ex){
+           return null;
+        }
+
+    }
+
+    @Override
+    public Boolean delete(String id) throws DaoException.DaoInternalError{
 
         try {
-            return Database.delateUser(id);
-        }catch (IOException ex){
+
+            return Database.deleteUser(id);
+        }catch (DaoException.DaoInternalError ex){
+            throw new DaoException.DaoInternalError(ex.getMessage());
+        }
+        catch (IOException ex){
+
+            ex.fillInStackTrace();
             return false;
         }
 
     }
 
-    public Boolean authenticate(String pseudo, String password) throws DaoException.NotFoundException {
-        if((pseudo.equals("yannis") && password.equals("password"))
+    private static boolean checkpassd(String password, String hash) {
+        return BCrypt.checkpw(password, hash);
+    }
+
+
+    public Boolean authenticate(String password, String passwordHashed) throws DaoException.NotFoundException {
+
+        return checkpassd(password,passwordHashed);
+
+
+        /*if((pseudo.equals("yannis") && password.equals("password"))
                 || (pseudo.equals("eric") && password.equals("password"))
                 || (pseudo.equals("naida") && password.equals("password"))
                 || (pseudo.equals("naida") && password.equals("password"))
@@ -74,7 +116,9 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
             return true;
         }else {
             throw new DaoException.NotFoundException("Authentification failed");
-        }
+        }*/
+
+
     }
 
     public  HashMap<String,String> getToken(String pseudo) {

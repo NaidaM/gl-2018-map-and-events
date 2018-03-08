@@ -27,7 +27,7 @@ public class Crud <T> implements CrudInterface<T> {
         return t;
     }
 
-    public Boolean delete(int t)  throws DaoException.DaoInternalError {
+    public Boolean delete(String id)  throws DaoException.DaoInternalError {
         //Make some action
         // If ok return true else throw Internal exception
         return true;

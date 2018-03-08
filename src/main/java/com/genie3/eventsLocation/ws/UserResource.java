@@ -2,7 +2,9 @@ package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.elastic.Database;
 import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
 import com.genie3.eventsLocation.models.User;
@@ -27,7 +29,8 @@ public class UserResource {
     public Response get(@PathParam("pseudo") String pseudo) {
 
         try {
-            User u =  Dao.getUserDao().get(pseudo);
+
+             User u =  Dao.getUserDao().getWithPseudo(pseudo);
             return Response.status(Response.Status.OK).entity(u).build();
         }catch (DaoException.NotFoundException ex){
             return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
@@ -36,7 +39,7 @@ public class UserResource {
         /*
         *   return Response.status(Response.Status.OK).entity(user).build();
         *    use this to return result with specific Http status and the method return must be
-        *    javax.ws.rs.core.Response
+        *    javax.ws.rs.core.Res0ponse
         */
     }
 
@@ -61,13 +64,17 @@ public class UserResource {
     @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{pseudo}")
+    @Path("/{id}")
     @RolesAllowed({"user"})
-    public Response delete(@PathParam("pseudo") String pseudo) {
-        if(Dao.getUserDao().delete(pseudo)){
+    public Response delete(@PathParam("id") String id) {
+
+        try {
+           Dao.getUserDao().delete(id);
             return Response.status(Response.Status.OK).build();
-        }else {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+
+        }catch (Exception ex){
+            Error error = new Error(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
 
     }
@@ -97,7 +104,7 @@ public class UserResource {
 
         try {
 
-            User u =  Dao.getUserDao().get(pseudo);
+            User u =  Dao.getUserDao().getWithPseudo(pseudo);
             map.setUser(u);
 
             EventMap eventMap =  Dao.getMapDao().create(map);
@@ -143,7 +150,7 @@ public class UserResource {
                            @PathParam("map_id") int mapIp) {
 
         try {
-            if(Dao.getMapDao().delete(mapIp)){
+            if(Dao.getMapDao().delete(""+mapIp)){
                 return Response.status(Response.Status.OK).build();
             }else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

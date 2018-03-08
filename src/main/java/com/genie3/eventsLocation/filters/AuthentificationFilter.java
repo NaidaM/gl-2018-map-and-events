@@ -108,9 +108,7 @@ public class AuthentificationFilter implements ContainerRequestFilter {
             UserDaoInterface userDao = Dao.getUserDao();
             User user = null;
             try {
-                user = userDao.get(id);
-                user.setRole("user");
-                user.setToken("eyJraWQiOiJrMSIsImFsZyI6IlJTMjU2In0.eyJpc3MiOiJldmVudHMuY29tIiwiZXhwIjoxNTI4MjgyMjU5LCJqdGkiOiJ3bUtzSnNMQTlQeVhCYzYtckphM1d3IiwiaWF0IjoxNTIwNTA2MjU5LCJuYmYiOjE1MjA1MDYyNTksImlkIjoiMSJ9.e1H95NLY09UCqf57-hD5Pun9ZKZ8VE37BOYFZjG4ru36sC4nO5xKwU2Jey2xPVnwgxOAyI5oBG4RTeUuvpA-CeJfVFm6uPRGFxFH97NtPZBa37KJL0d7FGPqWxBhuvVvMN9v_Rzd4fBIlVX1ASriSnRSPMMMbYXszsNkuETyDqYtkuRddIRPCh17cHETIcoddN50ieBG5axo_shEBbBkmnmAt8ihoTvOBh34lYA0tLgJahJWVlAWhBqZbH38wtCU7io-f7XKwfvf5WUYmxOCmequVt0NA6S2TTdcm_F6XC8LYBKD_VPeG4xh_LPHN7CTrCCt0kEXKHDB1eN106CmJg");
+                user = userDao.getWithId(id);
             }
             catch ( DaoException.NotFoundException e ) {
                 logger.warn("Token missmatch!");

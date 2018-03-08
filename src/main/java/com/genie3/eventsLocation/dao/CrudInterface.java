@@ -11,5 +11,5 @@ public interface CrudInterface<T> {
     List<T> read(String[] fields, String whereClause,String orderBy,Integer limit);
     T get(int id)  throws DaoException.NotFoundException;
     T update(T t)  throws DaoException.DaoInternalError ;
-    Boolean delete(int id)  throws DaoException.DaoInternalError;
+    Boolean delete(String id)  throws DaoException.DaoInternalError;
 }

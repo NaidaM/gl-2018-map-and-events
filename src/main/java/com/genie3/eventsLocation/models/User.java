@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class User
 {
 
-    private int id;
+    private String id;
 
 
     @NotNull(message = "Pseudo field is not provide")
@@ -58,7 +58,7 @@ public class User
                  @JsonProperty("password") String password ,
                  @JsonProperty("confirm") String confirm){
 
-        this.id = 1;
+        this.id = "1";
         this.pseudo=pseudo;
         this.email=email;
         this.password = password;
@@ -81,11 +81,11 @@ public class User
         return passwordConfirmation;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(String id){
         this.id = id;
     }
     public String getPseudo() {

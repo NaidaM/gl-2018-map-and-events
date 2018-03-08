@@ -103,7 +103,7 @@ public class MapResource {
 
 
         try {
-            if(Dao.getPlaceDao().delete(placeId)){
+            if(Dao.getPlaceDao().delete(""+placeId)){
                 return Response.status(Response.Status.OK).build();
             }else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

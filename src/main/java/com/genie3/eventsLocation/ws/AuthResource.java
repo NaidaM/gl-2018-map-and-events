@@ -16,6 +16,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 
@@ -28,15 +29,22 @@ public class AuthResource {
     public Response get(@AttemptAuthUser User user) {
 
         try {
-            Dao.getUserDao().authenticate(user.getPseudo(), user.getPassword());
-            User user1 = Dao.getUserDao().get(user.getPseudo());
 
+            User user1 = Dao.getUserDao().getWithPseudo(user.getPseudo());
+
+            Dao.getUserDao().authenticate(user.getPassword(), user1.getPassword());
             // Generate token
             String token = TokenSecurity.generateJwtToken(String.valueOf(user1.getId()));
 
             user1.setToken(token);
-            user1.setRole("user");
+
             //insert into bd
+            try {
+                Database.setToken(user1.getId(),token);
+            }catch (Exception e){
+
+            }
+
 
             HashMap<String,Object> map = new HashMap<String,Object>();
             map.put(AuthentificationFilter.AUTHORIZATION_PROPERTY, token );
@@ -70,20 +78,29 @@ public class AuthResource {
 
         try {
             user.setRole("user");
-            User user1 = Dao.getUserDao().create(user);
-            return Response.status(Response.Status.CREATED).entity(user1).build();
+            if(!Database.ExistPseudo(user.getPseudo())){
+                User user1 = Dao.getUserDao().create(user);
+                return Response.status(Response.Status.CREATED).entity(user1).build();
+            }else {
+                Error error = new Error("This pseudo already exist");
+                return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
+            }
+
         }catch (DaoException.DaoInternalError ex){
 
             Error error = new Error(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+        }catch (IOException ex){
+            Error error = new Error("This pseudo already exist");
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
-
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/ExistPseudo)")
-    public boolean ExistPseudo(String Pseudo) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/check")
+    public boolean ExistPseudo(@QueryParam("pseudo") String Pseudo) {
     	try {
 			return Database.ExistPseudo(Pseudo);
 		} catch (UnknownHostException e) {

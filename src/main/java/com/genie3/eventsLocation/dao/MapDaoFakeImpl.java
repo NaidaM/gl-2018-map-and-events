@@ -35,8 +35,8 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
                     "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure " +
                     "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat");
             try {
-               User u = Dao.getUserDao().get(users[i]);
-               u.setId(i+1);
+               User u = Dao.getUserDao().getWithPseudo(users[i]);
+               u.setId(""+i+1);
                 map.setUser(u);
                 map.setId(i+1);
                 maps.add(map);
