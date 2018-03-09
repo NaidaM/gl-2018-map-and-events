@@ -13,7 +13,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
 
     @Override
-    public EventMap get(int id) throws DaoException.NotFoundException {
+    public EventMap get(String id,String table) throws DaoException.NotFoundException {
         EventMap map = new EventMap("Map 1","Evznt description");
         map.setId(id);
         return map;
@@ -28,7 +28,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
         */
         String [] users = { "yannis","naida","imed","eric","zak"};
         ArrayList<EventMap> maps = new ArrayList<EventMap>();
-        for (int i = 0; i<users.length;i++){
+       /* for (int i = 0; i<users.length;i++){
             EventMap map = new EventMap("Title"+i,"Lorem ipsum dolor sit amet, " +
                     "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore " +
                     "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " +
@@ -36,9 +36,9 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
                     "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat");
             try {
                User u = Dao.getUserDao().getWithPseudo(users[i]);
-               u.setId(""+i+1);
+               u.setId(""+(i+1));
                 map.setUser(u);
-                map.setId(i+1);
+                map.setId(""+(i+1));
                 maps.add(map);
             }catch (DaoException.NotFoundException ex){
 
@@ -46,7 +46,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
 
 
-        }
+        }*/
         //return super.read(fields, whereClause, orderBy, limit);
         return maps;
     }
@@ -62,7 +62,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
                     "et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation " +
                     "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure " +
                     "dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat");
-            map.setId(i+1);
+            map.setId(""+i+1);
             map.setPlaces(null);
             maps.add(map);
         }

@@ -1,5 +1,6 @@
 package com.genie3.eventsLocation.dao;
 
+import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
@@ -10,8 +11,10 @@ public class Crud <T> implements CrudInterface<T> {
 
 
 
-    public T create(T t) throws DaoException.DaoInternalError {
-        return t;
+    public T create(T t,String table) throws DaoException.DaoInternalError {
+
+            return DB.create(t,table);
+
     }
 
     public List<T> read(String[] fields, String whereClause,String orderBy,Integer limit)
@@ -19,19 +22,20 @@ public class Crud <T> implements CrudInterface<T> {
         return null;
     }
 
-    public T get(int id) throws DaoException.NotFoundException {
-        return null;
+    public T get(String id, String table) throws DaoException.NotFoundException {
+        return DB.get(id,table);
     }
 
-    public T update(T t) throws DaoException.DaoInternalError {
-        return t;
+    public T update(T t,String table) throws DaoException.DaoInternalError {
+        return DB.update(t,table);
     }
 
-    public Boolean delete(String id)  throws DaoException.DaoInternalError {
-        //Make some action
-        // If ok return true else throw Internal exception
-        return true;
+    public Boolean delete(String id,String table)  throws DaoException.DaoInternalError {
+        try {
+
+            return DB.delete(id,table);
+        }catch (DaoException.DaoInternalError ex){
+            throw new DaoException.DaoInternalError(ex.getMessage());
+        }
     }
-
-
 }

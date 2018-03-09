@@ -108,7 +108,7 @@ public class AuthentificationFilter implements ContainerRequestFilter {
             UserDaoInterface userDao = Dao.getUserDao();
             User user = null;
             try {
-                user = userDao.getWithId(id);
+                user = userDao.get(id,"user");
             }
             catch ( DaoException.NotFoundException e ) {
                 logger.warn("Token missmatch!");

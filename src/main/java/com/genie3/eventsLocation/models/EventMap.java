@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class EventMap
 {
 
-    private int id;
+    private String id;
 
     @NotNull(message = "Name field is not provide")
     @NotBlank(message = "Name must not be blank")
@@ -45,11 +45,11 @@ public class EventMap
         this.places = new ArrayList<Place>();
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

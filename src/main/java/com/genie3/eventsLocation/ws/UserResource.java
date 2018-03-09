@@ -1,22 +1,16 @@
 package com.genie3.eventsLocation.ws;
 
-import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
-import com.genie3.eventsLocation.elastic.Database;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
-import com.genie3.eventsLocation.models.Place;
 import com.genie3.eventsLocation.models.User;
 
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/users")
@@ -51,7 +45,7 @@ public class UserResource {
     public Response update(@PathParam("pseudo") String pseudo,User user) {
 
         try{
-            User u =  Dao.getUserDao().update(user);
+            User u =  Dao.getUserDao().update(user,"user");
             return Response.status(Response.Status.OK).entity(u).build();
 
         }catch (DaoException.DaoInternalError ex){
@@ -69,7 +63,7 @@ public class UserResource {
     public Response delete(@PathParam("id") String id) {
 
         try {
-           Dao.getUserDao().delete(id);
+           Dao.getUserDao().delete(id,"user");
             return Response.status(Response.Status.OK).build();
 
         }catch (Exception ex){
@@ -107,7 +101,7 @@ public class UserResource {
             User u =  Dao.getUserDao().getWithPseudo(pseudo);
             map.setUser(u);
 
-            EventMap eventMap =  Dao.getMapDao().create(map);
+            EventMap eventMap =  Dao.getMapDao().create(map,"map");
 
             return Response.status(Response.Status.CREATED).entity(eventMap).build();
         }catch (DaoException.NotFoundException ex){
@@ -128,11 +122,11 @@ public class UserResource {
     @Path("/{pseudo}/maps/{map_id}")
     @RolesAllowed({"user"})
     public Response updateMap(@PathParam("pseudo") String pseudo,
-                              @PathParam("map_id") int mapIp,@Valid EventMap map) {
+                              @PathParam("map_id") String mapIp,@Valid EventMap map) {
 
         try {
             map.setId(mapIp);
-            EventMap map1 = Dao.getMapDao().update(map);
+            EventMap map1 = Dao.getMapDao().update(map,"map");
             return Response.status(Response.Status.OK).entity(map1).build();
         }catch (DaoException.DaoInternalError ex){
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
@@ -147,10 +141,10 @@ public class UserResource {
     @Path("/{pseudo}/maps/{map_id}")
     @RolesAllowed({"user"})
     public Response delete(@PathParam("pseudo") String pseudo,
-                           @PathParam("map_id") int mapIp) {
+                           @PathParam("map_id") String mapIp) {
 
         try {
-            if(Dao.getMapDao().delete(""+mapIp)){
+            if(Dao.getMapDao().delete(mapIp,"map")){
                 return Response.status(Response.Status.OK).build();
             }else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

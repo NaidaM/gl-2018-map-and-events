@@ -1,4 +1,5 @@
 /target/
 /.idea/
 /.settings/
+/log/*
 events-location.iml

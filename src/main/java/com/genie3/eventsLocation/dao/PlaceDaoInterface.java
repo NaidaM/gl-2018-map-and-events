@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 
 public interface PlaceDaoInterface extends  CrudInterface<Place> {
-    ArrayList<Place> getPlaceForMap(int mapId);
+    ArrayList<Place> getPlaceForMap(String mapId);
 }

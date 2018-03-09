@@ -3,7 +3,7 @@ package com.genie3.eventsLocation.ws;
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
-import com.genie3.eventsLocation.elastic.Database;
+import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.filters.AuthentificationFilter;
 import com.genie3.eventsLocation.filters.TokenSecurity;
@@ -39,26 +39,27 @@ public class AuthResource {
             user1.setToken(token);
 
             //insert into bd
-            try {
-                Database.setToken(user1.getId(),token);
-            }catch (Exception e){
 
-            }
+               // DB.setToken(user1.getId(),token);
+                DB.update(user1,"user");
+
 
 
             HashMap<String,Object> map = new HashMap<String,Object>();
-            map.put(AuthentificationFilter.AUTHORIZATION_PROPERTY, token );
+            map.put("access_token", token );
 
 
           //  HashMap<String,String> token = Dao.getUserDao().getToken(user.getPseudo());
 
 
             return Response.status(Response.Status.OK).entity(map).build();
-        }catch (DaoException.NotFoundException ex){
-            Error error = new Error(ex.getMessage());
 
+        }catch (DaoException.NotFoundException ex){
+
+            Error error = new Error(ex.getMessage());
             return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
-        }catch (JoseException ex){
+
+        }catch (Exception ex){
             Error error = new Error(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
@@ -78,8 +79,8 @@ public class AuthResource {
 
         try {
             user.setRole("user");
-            if(!Database.ExistPseudo(user.getPseudo())){
-                User user1 = Dao.getUserDao().create(user);
+            if(!DB.ExistPseudo(user.getPseudo())){
+                User user1 = Dao.getUserDao().create(user,"user");
                 return Response.status(Response.Status.CREATED).entity(user1).build();
             }else {
                 Error error = new Error("This pseudo already exist");
@@ -90,7 +91,7 @@ public class AuthResource {
 
             Error error = new Error(ex.getMessage());
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
-        }catch (IOException ex){
+        }catch (Exception ex){
             Error error = new Error("This pseudo already exist");
             return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
@@ -101,13 +102,8 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/check")
     public boolean ExistPseudo(@QueryParam("pseudo") String Pseudo) {
-    	try {
-			return Database.ExistPseudo(Pseudo);
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
+
+        return DB.ExistPseudo(Pseudo);
     }
 
 }

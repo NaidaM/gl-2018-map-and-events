@@ -20,10 +20,10 @@ public class MapResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}")
     @PermitAll
-    public Response get(@PathParam("pseudo") int mapId) {
+    public Response get(@PathParam("pseudo") String  mapId) {
 
         try {
-            EventMap map =  Dao.getMapDao().get(mapId);
+            EventMap map =  Dao.getMapDao().get(mapId,"map");
             ArrayList<Place> places = Dao.getPlaceDao().getPlaceForMap(mapId);
             map.setPlaces(places);
             return Response.status(Response.Status.OK).entity(map).build();
@@ -48,7 +48,7 @@ public class MapResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{id}/places")
-    public List<Place> getPlaces(@PathParam("pseudo") int mapId) {
+    public List<Place> getPlaces(@PathParam("pseudo") String mapId) {
 
         return Dao.getPlaceDao().getPlaceForMap(mapId);
 
@@ -62,7 +62,7 @@ public class MapResource {
     public Response createPlace(@PathParam("map_id") int mapId,@Valid Place place) {
         //place.getMap().setId(mapId);
         try {
-            Place p = Dao.getPlaceDao().create(place);
+            Place p = Dao.getPlaceDao().create(place,"place");
             return Response.status(Response.Status.CREATED).entity(p).build();
         }catch (DaoException.DaoInternalError ex){
 
@@ -83,7 +83,7 @@ public class MapResource {
         place.setId(placeId);
 
         try {
-            Place p =  Dao.getPlaceDao().update(place);
+            Place p =  Dao.getPlaceDao().update(place,"place");
             return Response.status(Response.Status.OK).entity(p).build();
         }catch (DaoException.DaoInternalError ex){
 
@@ -98,12 +98,12 @@ public class MapResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{map_id}/places/{place_id}")
-    public Response delete(@PathParam("map_id") int mapId,
-                           @PathParam("place_id") int placeId) {
+    public Response delete(@PathParam("map_id") String mapId,
+                           @PathParam("place_id") String placeId) {
 
 
         try {
-            if(Dao.getPlaceDao().delete(""+placeId)){
+            if(Dao.getPlaceDao().delete(placeId,"place")){
                 return Response.status(Response.Status.OK).build();
             }else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

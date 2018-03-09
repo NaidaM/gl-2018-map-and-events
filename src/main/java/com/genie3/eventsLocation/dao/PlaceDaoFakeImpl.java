@@ -10,7 +10,7 @@ public class PlaceDaoFakeImpl extends Crud<Place> implements PlaceDaoInterface{
 
 
 
-    public ArrayList<Place> getPlaceForMap(int mapId) {
+    public ArrayList<Place> getPlaceForMap(String mapId) {
         ArrayList<Place> places = new ArrayList<Place>();
         for (int i = 0; i<5;i++){
             Place p = new Place("Place "+i,"Lorem ipsum dolor sit amet, " +
