@@ -161,26 +161,30 @@ public final class DB {
 				.get();
 	}
 
-	public static User getUserWithPseudo(String name) {
+	public static User getUserWithPseudo(String name) throws DaoException.DaoInternalError{
 		TransportClient cl = getClient();
-		TermQueryBuilder qb= new TermQueryBuilder("pseudo", name);
-		SearchResponse res= cl.prepareSearch(index)
-				.setTypes("user")
-				.setQuery(qb)
-				.get();
-		SearchHit[] searchHit= res.getHits().getHits();
-		if(searchHit.length == 0)
-			return null;
-		Map<String, Object> map =searchHit[0].getSourceAsMap();
-		User user = new User();
+		try {
+			TermQueryBuilder qb = new TermQueryBuilder("pseudo", name);
+			SearchResponse res = cl.prepareSearch(index)
+					.setTypes("user")
+					.setQuery(qb)
+					.get();
+			SearchHit[] searchHit = res.getHits().getHits();
+			if (searchHit.length == 0)
+				return null;
+			Map<String, Object> map = searchHit[0].getSourceAsMap();
+			User user = new User();
 
-		user.setId(searchHit[0].getId());
-		user.setEmail((String) map.get("email"));
-		user.setPseudo(name);
-		user.setToken((String)map.get("token"));
-		user.setRole((String) map.get("role"));
-		user.setPassword((String) map.get("password"));
-		return user;
+			user.setId(searchHit[0].getId());
+			user.setEmail((String) map.get("email"));
+			user.setPseudo(name);
+			user.setToken((String) map.get("token"));
+			user.setRole((String) map.get("role"));
+			user.setPassword((String) map.get("password"));
+			return user;
+		}catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
 
 	}
 

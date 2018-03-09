@@ -18,12 +18,12 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
 
 
     @Valid
-    public User getWithPseudo(String pseudo){
+    public User getWithPseudo(String pseudo) throws DaoException.NotFoundException{
 
         try {
             return  DB.getUserWithPseudo(pseudo);
-        }catch (IOException ex){
-           return null;
+        }catch (Exception ex){
+           throw new DaoException.NotFoundException(ex.getMessage());
         }
 
     }
