@@ -10,6 +10,9 @@ import java.util.concurrent.ExecutionException;
 
 import com.genie3.eventsLocation.exception.DaoException;
 import org.elasticsearch.action.delete.DeleteResponse;
+
+import com.genie3.eventsLocation.models.EventMap;
+import com.genie3.eventsLocation.models.Place;
 import com.genie3.eventsLocation.models.User;
 
 import org.elasticsearch.action.get.GetResponse;
@@ -30,9 +33,9 @@ import org.elasticsearch.rest.RestStatus;
 public final class DB {
 
 
-	 static String host = "127.0.0.1";
-	 static int port = 9300;
-	 static String index = "events_location";
+	 private static String host = "127.0.0.1";
+	 private static int port = 9300;
+	 private static String index = "events_location";
 	
 	private static TransportClient client;
 	
@@ -60,19 +63,34 @@ public final class DB {
 
 			if (t instanceof User){
 				User user = (User) t;
-				builder.field("pseudo", user.getPseudo())
-						.field("email", user.getEmail())
-						.field("password", HashPwd(user.getPassword()))
-						.field("token", user.getToken())
-						.field("role", user.getRole())
-						.endObject();
-
+				builder = createUser(user,builder);
 				IndexResponse resp = client.prepareIndex(index, table)
 						.setSource(builder)
 						.get();
 				user.setId(resp.getId());
 				return (T) user;
-			}else {
+			}
+			if (t instanceof Place) {
+					Place place = (Place)t;
+					builder = createPlace(place,builder);
+					IndexResponse resp = client.prepareIndex(index, table)
+							.setSource(builder)
+							.get();
+					place.setId(resp.getId());
+					return (T) place;
+			}
+			if (t instanceof EventMap) {
+				EventMap map = (EventMap)t;
+				builder = createMap(map,builder);
+				IndexResponse resp = client.prepareIndex(index, table)
+						.setSource(builder)
+						.get();
+				 map.setId(resp.getId());
+				 return (T) map;
+			}
+						
+				else {
+				
 				throw new  DaoException.DaoInternalError("Sorry , this Object not yet implemented");
 			}
 
@@ -96,12 +114,7 @@ public final class DB {
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
 
-
-
-
 	}
-
-
 
 	@SuppressWarnings({"unchecked"})
 
@@ -139,27 +152,45 @@ public final class DB {
 
 
 	
-	public static void createPlace(String name,
-			double latitude,
-			double longitude,
-			String description,
-			String category) throws IOException {
+	public static XContentBuilder createPlace(Place place,XContentBuilder builder)  throws IOException {
 		
-		TransportClient cl= getClient();
-		XContentBuilder builder = jsonBuilder()
+		
+		builder = jsonBuilder()
 			    .startObject()
-			        .field("name", name)
-			        .field("latitude", latitude)
-			        .field("longitude", longitude)
-			        .field("description", description)
-			        .field("category", category)
-			        .field("mapId")
+			        .field("name", place.getName())
+			        .field("latitude", place.getLatitude())
+			        .field("longitude", place.getLongitude())
+			        .field("description", place.getDescription())
+			        .field("category", place.getcategory())
+			        .field("mapId",place.getplaceId())
 			    .endObject();
 		
-		cl.prepareIndex(index, "place")
-				.setSource(builder)
-				.get();
+		return builder;
 	}
+	
+	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
+		
+
+		 builder = jsonBuilder()
+			    .startObject()
+			        .field("name", map.getName())
+			        .field("description", map.getDescription())
+			        .field("userId",map.getUser())
+			    .endObject();
+		
+		return builder;	}
+	public static XContentBuilder createUser(User user,XContentBuilder builder) throws IOException {
+		
+
+		builder.field("pseudo", user.getPseudo())
+		.field("email", user.getEmail())
+		.field("password", HashPwd(user.getPassword()))
+		.field("token", user.getToken())
+		.field("role", user.getRole())
+		.endObject();
+		
+		return builder;	}
+	
 
 	public static User getUserWithPseudo(String name) throws DaoException.DaoInternalError{
 		TransportClient cl = getClient();
@@ -212,6 +243,7 @@ public final class DB {
 			throw new  DaoException.NotFoundException("Sorry , this Object not yet implemented");
 		}
 
+		
 
 	}
 
