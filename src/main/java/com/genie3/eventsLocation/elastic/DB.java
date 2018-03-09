@@ -289,6 +289,43 @@ public final class DB {
 
 	}
 
+	public static ArrayList<Place> getPlaces(String mapid) throws DaoInternalError  {
+		TransportClient cl = getClient();
+		TermQueryBuilder qb= new TermQueryBuilder("mapId", mapid);
+		try {
+			SearchResponse res= cl.prepareSearch(index)
+					.setTypes("place")
+					.setQuery(qb)
+					.get();
+			SearchHit[] searchHit= res.getHits().getHits();
+			ArrayList<Place> places= new ArrayList<>();
+			if(searchHit.length !=0 ) {
+				
+				for(int i=0; i<searchHit.length; i++) {
+
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					Place place= new Place();
+
+					place.setId(searchHit[i].getId());
+					place.setName((String)map.get("name"));
+					place.setDescription((String)map.get("description"));
+					place.setLatitude((String)map.get("latitude"));
+					place.setLongitude((String)map.get("longitude"));
+					place.setcategory((String)map.get("category"));
+					
+					places.add(place);
+				}
+			}
+			return places;
+
+
+		}catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
+
+
+	}
+	
 	public static ArrayList<EventMap> getUserMap(String userid) throws DaoInternalError  {
 		TransportClient cl = getClient();
 		TermQueryBuilder qb= new TermQueryBuilder("userId", userid);
