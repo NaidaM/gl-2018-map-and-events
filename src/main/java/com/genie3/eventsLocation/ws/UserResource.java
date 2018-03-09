@@ -2,6 +2,7 @@ package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.Dao;
 import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
@@ -75,17 +76,20 @@ public class UserResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{pseudo}/maps")
+    @Path("/{id}/maps")
     @RolesAllowed({"user"})
-    public Response getMaps(@PathParam("pseudo") String pseudo) {
+    public Response getMaps(@PathParam("pseudo") String id) {
 
 
-            List<EventMap> maps =  Dao.getMapDao().
-                    readForUser(pseudo,null,"",null,20);
-
-            return Response.status(Response.Status.OK).entity(maps).build();
-
-
+            List<EventMap> maps;
+			try {
+				maps = Dao.getMapDao().readUserMap(id);
+				return Response.status(Response.Status.OK).entity(maps).build();
+			} catch (DaoInternalError e) {
+				// TODO Auto-generated catch block
+				Error error= new Error(e.getMessage());
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+			}
 
 
     }

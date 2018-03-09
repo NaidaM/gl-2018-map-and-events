@@ -5,10 +5,13 @@ import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+
 import org.elasticsearch.action.delete.DeleteResponse;
 
 import com.genie3.eventsLocation.models.EventMap;
@@ -33,12 +36,12 @@ import org.elasticsearch.rest.RestStatus;
 public final class DB {
 
 
-	 private static String host = "127.0.0.1";
-	 private static int port = 9300;
-	 private static String index = "events_location";
-	
+	static String host = "127.0.0.1";
+	static int port = 9300;
+	static String index = "events_location";
+
 	private static TransportClient client;
-	
+
 	private static TransportClient getClient() {
 		if(client == null){
 			try {
@@ -64,6 +67,13 @@ public final class DB {
 			if (t instanceof User){
 				User user = (User) t;
 				builder = createUser(user,builder);
+				builder.field("pseudo", user.getPseudo())
+				.field("email", user.getEmail())
+				.field("password", HashPwd(user.getPassword()))
+				.field("token", user.getToken())
+				.field("role", user.getRole())
+				.endObject();
+
 				IndexResponse resp = client.prepareIndex(index, table)
 						.setSource(builder)
 						.get();
@@ -133,9 +143,9 @@ public final class DB {
 				updateRequest.id(user.getId());
 
 				builder.field("pseudo", user.getPseudo())
-						.field("email", user.getEmail())
-						.field("token", user.getToken())
-						.endObject();
+				.field("email", user.getEmail())
+				.field("token", user.getToken())
+				.endObject();
 				updateRequest.doc(builder);
 				client.update(updateRequest).get();
 				return (T) user;
@@ -279,8 +289,39 @@ public final class DB {
 
 	}
 
+	public static ArrayList<EventMap> getUserMap(String userid) throws DaoInternalError  {
+		TransportClient cl = getClient();
+		TermQueryBuilder qb= new TermQueryBuilder("userId", userid);
+		try {
+			SearchResponse res= cl.prepareSearch(index)
+					.setTypes("user")
+					.setQuery(qb)
+					.get();
+			SearchHit[] searchHit= res.getHits().getHits();
+			ArrayList<EventMap> eventMaps= new ArrayList<>();
+			if(searchHit.length !=0 ) {
+				
+				for(int i=0; i<searchHit.length; i++) {
 
-	
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					EventMap eventMap= new EventMap();
+
+					eventMap.setId(searchHit[i].getId());
+					eventMap.setName((String)map.get("name"));
+					eventMap.setDescription((String)map.get("description"));
+					eventMaps.add(eventMap);
+				}
+			}
+			return eventMaps;
+
+
+		}catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
+
+
+	}
+
 	public static boolean ExistPseudo(String Pseudo)  {
 		TransportClient cl = getClient();
 		TermQueryBuilder qb= new TermQueryBuilder("pseudo", Pseudo);
@@ -297,9 +338,9 @@ public final class DB {
 
 
 	}
-	
-	 static String HashPwd(String password) {
-	    	return BCrypt.hashpw(password, BCrypt.gensalt(15));
+
+	static String HashPwd(String password) {
+		return BCrypt.hashpw(password, BCrypt.gensalt(15));
 	}
 
 

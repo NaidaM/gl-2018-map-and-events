@@ -2,7 +2,9 @@ package com.genie3.eventsLocation.dao;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.User;
 
@@ -69,6 +71,17 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
         //return super.read(fields, whereClause, orderBy, limit);
         return maps;
     }
+
+	@Override
+	public List<EventMap> readUserMap(String id) throws DaoInternalError {
+		// TODO Auto-generated method stub
+		try{
+			return DB.getUserMap(id);
+		}catch (Exception e) {
+			// TODO: handle exception
+			throw new DaoException.DaoInternalError(e.getMessage());
+		}
+	}
 
 }
 

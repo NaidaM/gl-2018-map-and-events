@@ -3,3 +3,4 @@
 /.settings/
 /log/*
 events-location.iml
+src/main/java/com/genie3/eventsLocation/Elastic.java
