@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+//import java.util.concurrent.ExecutionException;
 
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
