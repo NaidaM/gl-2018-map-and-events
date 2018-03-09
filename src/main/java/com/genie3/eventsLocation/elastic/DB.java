@@ -142,6 +142,7 @@ public final class DB {
 			}
 			if(t instanceof Place) {
 				Place p =(Place)t;
+				updateRequest.id(p.getId());
 				builder=uploadPlace(p,builder);
 				updateRequest.doc(builder);
 				client.update(updateRequest).get();
@@ -149,6 +150,7 @@ public final class DB {
 			}
 			if(t instanceof EventMap) {
 				EventMap map=(EventMap)t;
+				updateRequest.id(map.getId());
 				builder = uploadMap(map,builder);
 				updateRequest.doc(builder);
 				client.update(updateRequest).get();
