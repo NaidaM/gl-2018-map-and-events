@@ -34,9 +34,14 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
     }
 
 
-    public Boolean authenticate(String password, String passwordHashed) {
-
-        return checkPassword(password,passwordHashed);
+    public Boolean authenticate(String password, String passwordHashed) throws DaoException.NotFoundException {
+    	
+        if(checkPassword(password,passwordHashed)) {
+        	return true;
+        }
+        else {
+        	throw new DaoException.NotFoundException("login or password incorect");
+        }
     }
 
 
