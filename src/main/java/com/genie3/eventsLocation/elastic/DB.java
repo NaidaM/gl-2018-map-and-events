@@ -140,6 +140,20 @@ public final class DB {
 				client.update(updateRequest).get();
 				return (T) user;
 			}
+			if(t instanceof Place) {
+				Place p =(Place)t;
+				builder=uploadPlace(p,builder);
+				updateRequest.doc(builder);
+				client.update(updateRequest).get();
+				return (T) p;
+			}
+			if(t instanceof EventMap) {
+				EventMap map=(EventMap)t;
+				builder = uploadMap(map,builder);
+				updateRequest.doc(builder);
+				client.update(updateRequest).get();
+				return (T) map;
+			}
 			else {
 				throw new  DaoException.DaoInternalError("Sorry , this Object not yet implemented");
 			}
@@ -149,14 +163,32 @@ public final class DB {
 		}
 	}
 
+	public static XContentBuilder uploadPlace(Place place,XContentBuilder builder)  throws IOException {
+		builder = jsonBuilder()
+			    .startObject()
+			        .field("name", place.getName())
+			        .field("description", place.getDescription())
+			        .field("category", place.getcategory())
+			    .endObject();
+		
+		return builder;
+	}
 
+	public static XContentBuilder uploadMap(EventMap map,XContentBuilder builder) throws IOException {
+		
+
+					builder 
+			        .field("name", map.getName())
+			        .field("description", map.getDescription())
+			    .endObject();
+		
+		return builder;	}
 
 	
 	public static XContentBuilder createPlace(Place place,XContentBuilder builder)  throws IOException {
 		
 		
-		builder = jsonBuilder()
-			    .startObject()
+					builder
 			        .field("name", place.getName())
 			        .field("latitude", place.getLatitude())
 			        .field("longitude", place.getLongitude())
@@ -171,8 +203,7 @@ public final class DB {
 	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
 		
 
-		 builder = jsonBuilder()
-			    .startObject()
+		 			builder 
 			        .field("name", map.getName())
 			        .field("description", map.getDescription())
 			        .field("userId",map.getUser())
@@ -180,7 +211,6 @@ public final class DB {
 		
 		return builder;	}
 	public static XContentBuilder createUser(User user,XContentBuilder builder) throws IOException {
-		
 
 		builder.field("pseudo", user.getPseudo())
 		.field("email", user.getEmail())
