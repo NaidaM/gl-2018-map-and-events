@@ -38,11 +38,13 @@ public class EventMap
         this.name = name;
         this.description = description;
         this.places = new ArrayList<Place>();
+        this.user = null;
 
     }
 
     public EventMap() {
         this.places = new ArrayList<Place>();
+        this.user = null;
     }
 
     public String getId() {
@@ -77,13 +79,13 @@ public class EventMap
         this.places = places;
     }
 
-    @Valid
+
     public User getUser() {
         return user;
     }
 
 
-    public void setUser(@Valid User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 }

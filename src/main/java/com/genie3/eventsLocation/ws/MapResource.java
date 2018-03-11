@@ -3,11 +3,14 @@ package com.genie3.eventsLocation.ws;
 import com.genie3.eventsLocation.dao.Dao;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
+import com.genie3.eventsLocation.models.User;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -20,22 +23,17 @@ public class MapResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}")
-	@PermitAll
-	public Response get(@PathParam("pseudo") String  mapId) {
+	public Response get(@PathParam("id") String  mapId) {
 
 		try {
 			EventMap map =  Dao.getMapDao().get(mapId,"map");
-			ArrayList<Place> places = null; 
-			try {
-				places = Dao.getPlaceDao().getPlaceForMap(mapId);
-			} catch (DaoInternalError e) {
-				e.printStackTrace();
-			}
-			map.setPlaces(places);
 			return Response.status(Response.Status.OK).entity(map).build();
-		}catch (DaoException.NotFoundException ex){
+		}
+		catch (DaoException.NotFoundException ex){
 
-			return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+			return Response.status(Response.Status.NOT_FOUND)
+					.entity(new Error(ex.getMessage()))
+					.build();
 		}
 
 
@@ -54,12 +52,15 @@ public class MapResource {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{id}/places")
-	public List<Place> getPlaces(@PathParam("pseudo") String mapId) {
+	public Response getPlaces(@PathParam("id") String mapId) {
 
 		try {
-			return Dao.getPlaceDao().getPlaceForMap(mapId);
+			List<Place> p = Dao.getPlaceDao().getPlaceForMap(mapId);
+            return Response.status(Response.Status.OK).entity(p).build();
 		} catch (DaoInternalError e) {
-			return null;
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Error(e.getMessage()))
+                    .build();
 		}
 
 	}
@@ -69,14 +70,23 @@ public class MapResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/{map_id}/places")
 	@PermitAll
-	public Response createPlace(@PathParam("map_id") int mapId,@Valid Place place) {
-		//place.getMap().setId(mapId);
-		try {
-			Place p = Dao.getPlaceDao().create(place,"place");
-			return Response.status(Response.Status.CREATED).entity(p).build();
-		}catch (DaoException.DaoInternalError ex){
+	public Response createPlace(@PathParam("map_id") String  mapId,
+								@NotNull(message = "Post body must not empty")
+								@Valid Place place) {
 
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+		try {
+			 EventMap map = Dao.getMapDao().get(mapId,"map");
+			place.setMap(map);
+			Place p = Dao.getPlaceDao().create(place,"place");
+			p.setMap(null);
+			return Response.status(Response.Status.CREATED).entity(p).build();
+		}catch (DaoException.NotFoundException ex){
+			return Response.status(Response.Status.NOT_FOUND).entity(new Error(ex.getMessage())).build();
+		}
+		catch (DaoException.DaoInternalError ex){
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Error(ex.getMessage())).build();
 		}
 
 
@@ -89,7 +99,9 @@ public class MapResource {
 	@Path("/{map_id}/places/{place_id}")
 	@PermitAll
 	public Response updatePlace(@PathParam("map_id") String mapId,
-			@PathParam("place_id") String placeId,@Valid Place place) {
+			@PathParam("place_id") String placeId,
+			@NotNull(message = "Post body must not empty")
+			@Valid Place place) {
 		place.setId(placeId);
 
 		try {
@@ -97,7 +109,8 @@ public class MapResource {
 			return Response.status(Response.Status.OK).entity(p).build();
 		}catch (DaoException.DaoInternalError ex){
 
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Error(ex.getMessage())).build();
 		}
 
 
@@ -120,7 +133,8 @@ public class MapResource {
 			}
 		}catch (DaoException.DaoInternalError ex){
 
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.getMessage()).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Error(ex.getMessage())).build();
 		}
 
 

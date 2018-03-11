@@ -16,7 +16,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
     @Override
     public EventMap get(String id,String table) throws DaoException.NotFoundException {
-        EventMap map = new EventMap("Map 1","Evznt description");
+        EventMap map = DB.get(id,"map");
         map.setId(id);
         return map;
     }
@@ -74,11 +74,11 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
 	@Override
 	public List<EventMap> readUserMap(String id) throws DaoInternalError {
-		// TODO Auto-generated method stub
+
 		try{
 			return DB.getUserMap(id);
 		}catch (Exception e) {
-			// TODO: handle exception
+
 			throw new DaoException.DaoInternalError(e.getMessage());
 		}
 	}

@@ -8,9 +8,11 @@ import org.mindrot.jbcrypt.BCrypt;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
+
 public class User
 {
 
@@ -36,21 +38,14 @@ public class User
     @JsonIgnore
     private String passwordConfirmation;
 
-    @JsonIgnore
-    private ArrayList<EventMap> maps;
+    private List<EventMap> maps;
     @JsonIgnore
     private String token;
 
     @NotNull(message = "Role  field is not provide")
+    @JsonIgnore
     private String role;
-    
-    public static String HashPssd (String password) {
-    	return BCrypt.hashpw(password, BCrypt.gensalt(15));
-    }
-    
-    public static boolean checkpassd(String password, String hash) {
-    	 return BCrypt.checkpw(password, hash);
-    }
+
 
     @JsonCreator
     public User( @JsonProperty("pseudo") String pseudo,
@@ -118,11 +113,11 @@ public class User
         this.passwordConfirmation = passwordConfirmation;
     }
 
-    public ArrayList<EventMap> getMaps() {
+    public List<EventMap> getMaps() {
         return maps;
     }
 
-    public void setMaps(ArrayList<EventMap> maps) {
+    public void setMaps(List<EventMap> maps) {
         this.maps = maps;
     }
 

@@ -20,13 +20,17 @@ import com.genie3.eventsLocation.models.User;
 
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.search.MultiMatchQuery;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
@@ -38,7 +42,9 @@ public final class DB {
 
 	static String host = "127.0.0.1";
 	static int port = 9300;
-	static String index = "events_location";
+	static String userIndex = "user";
+	static String mapIndex = "map";
+	static String placeIndex = "place";
 
 	private static TransportClient client;
 
@@ -67,14 +73,7 @@ public final class DB {
 			if (t instanceof User){
 				User user = (User) t;
 				builder = createUser(user,builder);
-				builder.field("pseudo", user.getPseudo())
-				.field("email", user.getEmail())
-				.field("password", HashPwd(user.getPassword()))
-				.field("token", user.getToken())
-				.field("role", user.getRole())
-				.endObject();
-
-				IndexResponse resp = client.prepareIndex(index, table)
+				IndexResponse resp = client.prepareIndex(userIndex, table)
 						.setSource(builder)
 						.get();
 				user.setId(resp.getId());
@@ -83,7 +82,7 @@ public final class DB {
 			if (t instanceof Place) {
 					Place place = (Place)t;
 					builder = createPlace(place,builder);
-					IndexResponse resp = client.prepareIndex(index, table)
+					IndexResponse resp = client.prepareIndex(placeIndex, table)
 							.setSource(builder)
 							.get();
 					place.setId(resp.getId());
@@ -92,7 +91,7 @@ public final class DB {
 			if (t instanceof EventMap) {
 				EventMap map = (EventMap)t;
 				builder = createMap(map,builder);
-				IndexResponse resp = client.prepareIndex(index, table)
+				IndexResponse resp = client.prepareIndex(mapIndex, table)
 						.setSource(builder)
 						.get();
 				 map.setId(resp.getId());
@@ -114,7 +113,8 @@ public final class DB {
 
 		TransportClient cl = getClient();
 		try {
-			DeleteResponse del = cl.prepareDelete(index,table,id).get();
+
+			DeleteResponse del = cl.prepareDelete(table,table,id).get();
 			if (del.status().equals(RestStatus.OK)){
 				return true;
 			}else {
@@ -132,7 +132,7 @@ public final class DB {
 		TransportClient client = getClient();
 		try {
 			UpdateRequest updateRequest = new UpdateRequest();
-			updateRequest.index(index);
+			updateRequest.index(table);
 			updateRequest.type(table);
 
 			XContentBuilder builder = jsonBuilder()
@@ -153,7 +153,7 @@ public final class DB {
 			if(t instanceof Place) {
 				Place p =(Place)t;
 				updateRequest.id(p.getId());
-				builder=uploadPlace(p,builder);
+				builder=updatePlace(p,builder);
 				updateRequest.doc(builder);
 				client.update(updateRequest).get();
 				return (T) p;
@@ -161,7 +161,7 @@ public final class DB {
 			if(t instanceof EventMap) {
 				EventMap map=(EventMap)t;
 				updateRequest.id(map.getId());
-				builder = uploadMap(map,builder);
+				builder = updateMap(map,builder);
 				updateRequest.doc(builder);
 				client.update(updateRequest).get();
 				return (T) map;
@@ -175,18 +175,20 @@ public final class DB {
 		}
 	}
 
-	public static XContentBuilder uploadPlace(Place place,XContentBuilder builder)  throws IOException {
+	public static XContentBuilder updatePlace(Place place,XContentBuilder builder)  throws IOException {
 		builder = jsonBuilder()
 			    .startObject()
 			        .field("name", place.getName())
 			        .field("description", place.getDescription())
+			        .field("latitude", place.getLatitude())
+			        .field("longitude", place.getLongitude())
 			        .field("category", place.getcategory())
 			    .endObject();
 		
 		return builder;
 	}
 
-	public static XContentBuilder uploadMap(EventMap map,XContentBuilder builder) throws IOException {
+	public static XContentBuilder updateMap(EventMap map,XContentBuilder builder) throws IOException {
 		
 
 					builder 
@@ -206,7 +208,7 @@ public final class DB {
 			        .field("longitude", place.getLongitude())
 			        .field("description", place.getDescription())
 			        .field("category", place.getcategory())
-			        .field("mapId",place.getplaceId())
+			        .field("mapId",place.getMap().getId())
 			    .endObject();
 		
 		return builder;
@@ -218,7 +220,7 @@ public final class DB {
 		 			builder 
 			        .field("name", map.getName())
 			        .field("description", map.getDescription())
-			        .field("userId",map.getUser())
+			        .field("userId",map.getUser().getId())
 			    .endObject();
 		
 		return builder;	}
@@ -234,17 +236,17 @@ public final class DB {
 		return builder;	}
 	
 
-	public static User getUserWithPseudo(String name) throws DaoException.DaoInternalError{
+	public static User getUserWithPseudo(String name) throws DaoException.NotFoundException{
 		TransportClient cl = getClient();
 		try {
 			TermQueryBuilder qb = new TermQueryBuilder("pseudo", name);
-			SearchResponse res = cl.prepareSearch(index)
+			SearchResponse res = cl.prepareSearch(userIndex)
 					.setTypes("user")
 					.setQuery(qb)
 					.get();
 			SearchHit[] searchHit = res.getHits().getHits();
 			if (searchHit.length == 0)
-				return null;
+				throw new  DaoException.NotFoundException("Unknown user with pseudo : "+name);
 			Map<String, Object> map = searchHit[0].getSourceAsMap();
 			User user = new User();
 
@@ -256,7 +258,7 @@ public final class DB {
 			user.setPassword((String) map.get("password"));
 			return user;
 		}catch (Exception ex){
-			throw new DaoException.DaoInternalError(ex.getMessage());
+			throw new DaoException.NotFoundException(ex.getMessage());
 		}
 
 	}
@@ -266,10 +268,10 @@ public final class DB {
 	public static <T> T get(String id,String table) throws  DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
-		GetResponse res= cl.prepareGet(index,table,id).get();
+		GetResponse res= cl.prepareGet(table,table,id).get();
 
 		if(!res.isExists())
-			return null;
+            throw new  DaoException.NotFoundException("No data found for id : "+id);
 		if(table.equals("user")){
 			Map<String, Object> map = res.getSourceAsMap();
 			User user = new User();
@@ -280,7 +282,27 @@ public final class DB {
 			user.setRole((String) map.get("role"));
 			user.setPassword((String) map.get("password"));
 			return (T) user;
-		}else {
+		}
+
+		else if(table.equals("map")){
+			Map<String, Object> map = res.getSourceAsMap();
+			EventMap eventMap = new EventMap();
+
+			eventMap.setId(id);
+			eventMap.setName((String) map.get("name"));
+			eventMap.setDescription((String)map.get("description"));
+
+			User u = DB.get((String)map.get("userId"),"user");
+			u.setMaps(null);
+			eventMap.setUser(u);
+
+
+			return (T) eventMap;
+		}
+
+
+
+		else {
 
 			throw new  DaoException.NotFoundException("Sorry , this Object not yet implemented");
 		}
@@ -289,16 +311,22 @@ public final class DB {
 
 	}
 
-	public static ArrayList<Place> getPlaces(String mapid) throws DaoInternalError  {
+	public static ArrayList<Place> getPlaces(String mapId) throws DaoInternalError  {
 		TransportClient cl = getClient();
-		TermQueryBuilder qb= new TermQueryBuilder("mapId", mapid);
+		ArrayList<Place> places= new ArrayList<Place>();
 		try {
-			SearchResponse res= cl.prepareSearch(index)
-					.setTypes("place")
+
+
+			SearchResponse res = cl.prepareSearch(placeIndex)
+					.setTypes(placeIndex)
+					.setQuery(QueryBuilders.matchQuery("mapId",mapId)).get();
+			/*TermQueryBuilder qb= new TermQueryBuilder("mapId", mapId);
+			SearchResponse res= cl.prepareSearch(placeIndex)
+					.setTypes(placeIndex)
 					.setQuery(qb)
-					.get();
+					.get();*/
 			SearchHit[] searchHit= res.getHits().getHits();
-			ArrayList<Place> places= new ArrayList<>();
+
 			if(searchHit.length !=0 ) {
 				
 				for(int i=0; i<searchHit.length; i++) {
@@ -317,25 +345,34 @@ public final class DB {
 				}
 			}
 			return places;
-
-
 		}catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
 
-
 	}
 	
-	public static ArrayList<EventMap> getUserMap(String userid) throws DaoInternalError  {
+	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError  {
 		TransportClient cl = getClient();
-		TermQueryBuilder qb= new TermQueryBuilder("userId", userid);
+
+		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
+
+
 		try {
-			SearchResponse res= cl.prepareSearch(index)
-					.setTypes("user")
+			SearchResponse res = cl.prepareSearch(mapIndex)
+					.setTypes(mapIndex)
+					.setQuery(QueryBuilders.matchQuery("userId",userId)).get();
+
+			/*SearchResponse res= cl.prepareSearch(mapIndex)
+					.setTypes(mapIndex)
 					.setQuery(qb)
-					.get();
+					.get();*/
+
 			SearchHit[] searchHit= res.getHits().getHits();
-			ArrayList<EventMap> eventMaps= new ArrayList<>();
+
+			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
+			System.out.println("hits " + res.getHits().totalHits);
+			System.out.println("Id " + userId);
+			System.out.println("Length " + searchHit.length);
 			if(searchHit.length !=0 ) {
 				
 				for(int i=0; i<searchHit.length; i++) {
@@ -346,6 +383,7 @@ public final class DB {
 					eventMap.setId(searchHit[i].getId());
 					eventMap.setName((String)map.get("name"));
 					eventMap.setDescription((String)map.get("description"));
+					eventMap.setPlaces(null);
 					eventMaps.add(eventMap);
 				}
 			}
@@ -361,12 +399,17 @@ public final class DB {
 
 	public static boolean ExistPseudo(String Pseudo)  {
 		TransportClient cl = getClient();
-		TermQueryBuilder qb= new TermQueryBuilder("pseudo", Pseudo);
+		//TermQueryBuilder qb= new TermQueryBuilder("pseudo", Pseudo);
 		try {
-			SearchResponse res= cl.prepareSearch(index)
-					.setTypes("user")
+
+			SearchResponse res = cl.prepareSearch(userIndex)
+					.setTypes(userIndex)
+					.setQuery(QueryBuilders.matchQuery("pseudo",Pseudo)).get();
+
+			/*SearchResponse res= cl.prepareSearch(userIndex)
+					.setTypes(userIndex)
 					.setQuery(qb)
-					.get();
+					.get();*/
 			SearchHit[] searchHit= res.getHits().getHits();
 			return  (searchHit.length == 1);
 		}catch (Exception ex){

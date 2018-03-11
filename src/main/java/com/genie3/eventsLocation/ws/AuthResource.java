@@ -12,12 +12,11 @@ import com.genie3.eventsLocation.models.User;
 import org.jose4j.lang.JoseException;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 
 @Path("/auth")
@@ -26,7 +25,7 @@ public class AuthResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
-    public Response get(@AttemptAuthUser User user) {
+    public Response get(@NotNull(message = "Post body must not empty") @AttemptAuthUser User user) {
 
         try {
 
@@ -56,7 +55,7 @@ public class AuthResource {
 
         }catch (DaoException.NotFoundException ex){
 
-            Error error = new Error(ex.getMessage());
+            Error error = new Error("login or password incorect");
             return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
 
         }catch (Exception ex){
@@ -75,7 +74,7 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
-    public Response create(@Valid @ValidPassword User user)  {
+    public Response create(@NotNull(message = "Post body must not empty") @Valid @ValidPassword User user)  {
 
         try {
             user.setRole("user");

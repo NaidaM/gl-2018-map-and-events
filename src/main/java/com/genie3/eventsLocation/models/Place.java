@@ -20,7 +20,7 @@ public  class Place {
 
 
     private String id;
-    private String placeId;
+
     @NotNull(message = "Name field must be provide")
     @NotBlank(message = "Provide a name for a place")
     private String name;
@@ -36,6 +36,7 @@ public  class Place {
     @NotNull
     @NotBlank
     private String description;
+
     private String category;	
     @JsonIgnore
     private EventMap map;
@@ -46,8 +47,7 @@ public  class Place {
                   @JsonProperty("description") String description,
                   @JsonProperty("latitude") String latitude,
                   @JsonProperty("longitude") String longitude,
-                  @JsonProperty("category") String category,
-                  @JsonProperty("placeId") String placeId
+                  @JsonProperty("category") String category
                   ) {
 
         this.name = name;
@@ -56,7 +56,6 @@ public  class Place {
         this.latitude = latitude;
         this.map = null;
         this.category=category;
-        this.placeId=placeId;
     }
 
     public Place() {
@@ -70,14 +69,6 @@ public  class Place {
 
     public void setId(String id) {
         this.id = id;
-    }
-    
-    public String getplaceId() {
-        return placeId;
-    }
-
-    public void setplaceId(String id) {
-        this.placeId = id;
     }
 
     public String getcategory() {
