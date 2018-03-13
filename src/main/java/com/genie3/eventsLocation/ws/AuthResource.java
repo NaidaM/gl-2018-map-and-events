@@ -1,28 +1,32 @@
 package com.genie3.eventsLocation.ws;
 
+import java.util.HashMap;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
 import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.filters.AuthentificationFilter;
 import com.genie3.eventsLocation.filters.TokenSecurity;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.User;
-import org.jose4j.lang.JoseException;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
-import java.util.HashMap;
 
 @Path("/auth")
 
 public class AuthResource {
     @POST
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/login")
     public Response get(@NotNull(message = "Post body must not empty") @AttemptAuthUser User user) {
@@ -34,7 +38,6 @@ public class AuthResource {
             Dao.getUserDao().authenticate(user.getPassword(), user1.getPassword());
             // Generate token
             String token = TokenSecurity.generateJwtToken(String.valueOf(user1.getId()));
-
             user1.setToken(token);
 
             //insert into bd

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.genie3</groupId>
 	<artifactId>events-location</artifactId>
@@ -35,17 +36,17 @@
 				<artifactId>exec-maven-plugin</artifactId>
 				<version>1.6.0</version>
 				<executions>
-				<execution>
-					<id>
+					<execution>
+						<id>
 						start-app
 					</id>
-					<goals>
-						<goal>java</goal>
-					</goals>
-					<configuration>
-						<mainClass>com.genie3.eventsLocation.App</mainClass>
-					</configuration>
-				</execution>
+						<goals>
+							<goal>java</goal>
+						</goals>
+						<configuration>
+							<mainClass>com.genie3.eventsLocation.App</mainClass>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
@@ -132,11 +133,6 @@
 		</dependency>
 		
 		<dependency>
-    		  <groupId>org.elasticsearch.client</groupId>
-    		  <artifactId>transport</artifactId>
-    		  <version>6.2.1</version>
-		</dependency>
-		<dependency>
     		  <groupId>org.apache.logging.log4j</groupId>
     		  <artifactId>log4j-to-slf4j</artifactId>
     		  <version>2.9.1</version>
@@ -176,7 +172,11 @@
     		<artifactId>jbcrypt</artifactId>
     		<version>0.4</version>
 		</dependency>
-		
+		<dependency>
+		    <groupId>org.elasticsearch.client</groupId>
+		    <artifactId>transport</artifactId>
+		    <version>6.2.2</version>
+		</dependency>
 	</dependencies>
 
 

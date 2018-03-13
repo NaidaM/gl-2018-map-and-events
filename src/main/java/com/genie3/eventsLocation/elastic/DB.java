@@ -9,32 +9,27 @@ import java.util.ArrayList;
 import java.util.Map;
 //import java.util.concurrent.ExecutionException;
 
-import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
-
 import org.elasticsearch.action.delete.DeleteResponse;
-
-import com.genie3.eventsLocation.models.EventMap;
-import com.genie3.eventsLocation.models.Place;
-import com.genie3.eventsLocation.models.User;
-
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.index.search.MultiMatchQuery;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
-import org.elasticsearch.rest.RestStatus;
+
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.models.EventMap;
+import com.genie3.eventsLocation.models.Place;
+import com.genie3.eventsLocation.models.User;
 
 
 public final class DB {

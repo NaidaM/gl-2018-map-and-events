@@ -1,29 +1,27 @@
     package com.genie3.eventsLocation.filters;
 
-    import org.jose4j.jwk.RsaJsonWebKey;
-    import org.jose4j.jwk.RsaJwkGenerator;
-    import org.jose4j.jws.AlgorithmIdentifiers;
-    import org.jose4j.jws.JsonWebSignature;
-    import org.jose4j.jwt.JwtClaims;
-    import org.jose4j.jwt.consumer.InvalidJwtException;
-    import org.jose4j.jwt.consumer.JwtConsumer;
-    import org.jose4j.jwt.consumer.JwtConsumerBuilder;
-    import org.jose4j.lang.JoseException;
-
     import java.io.File;
-    import java.io.IOException;
-    import java.nio.file.Files;
-    import java.nio.file.Path;
-    import java.nio.file.Paths;
-    import java.security.KeyFactory;
-    import java.security.NoSuchAlgorithmException;
-    import java.security.PrivateKey;
-    import java.security.PublicKey;
-    import java.security.interfaces.RSAPublicKey;
-    import java.security.spec.InvalidKeySpecException;
-    import java.security.spec.PKCS8EncodedKeySpec;
-    import java.security.spec.X509EncodedKeySpec;
-    import java.util.Base64;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
+
+import org.jose4j.jwk.RsaJsonWebKey;
+import org.jose4j.jws.AlgorithmIdentifiers;
+import org.jose4j.jws.JsonWebSignature;
+import org.jose4j.jwt.JwtClaims;
+import org.jose4j.jwt.consumer.InvalidJwtException;
+import org.jose4j.jwt.consumer.JwtConsumer;
+import org.jose4j.jwt.consumer.JwtConsumerBuilder;
+import org.jose4j.lang.JoseException;
 
 
     public class TokenSecurity {
@@ -53,21 +51,23 @@
                     String privateKeyContent = new String(Files.readAllBytes(p1));
                     String publicKeyContent = new String(Files.readAllBytes(p2));
 
-                    privateKeyContent = privateKeyContent.replaceAll("\\n","")
+                    privateKeyContent = privateKeyContent.replaceAll("\\r|\\n","")
                             .replace("-----BEGIN PRIVATE KEY-----","")
                             .replace("-----END PRIVATE KEY-----","");
-
+                    byte[] b1 =  privateKeyContent.getBytes();
+                    byte[] b2 =  publicKeyContent.getBytes();
 
                    /* Generate private key*/
                     PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyContent));
                     KeyFactory kf = KeyFactory.getInstance("RSA");
                     PrivateKey pvt = kf.generatePrivate(ks);
 
-                publicKeyContent = publicKeyContent.replaceAll("\\n","")
+                publicKeyContent = publicKeyContent.replaceAll("\\r|\\n","")
                         .replace("-----BEGIN PUBLIC KEY-----","")
                         .replace("-----END PUBLIC KEY-----","");
 
                 /* Generate public key.*/
+               
                 X509EncodedKeySpec ks2 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyContent));
 
                 PublicKey pub = kf.generatePublic(ks2);
@@ -96,7 +96,7 @@
                 //System.out.println("2 - " + ex.getMessage());
                 ex.printStackTrace();
             }
-            catch (IOException ex){
+            catch (Exception ex){
 
                 logger.warn("1 - " + ex.getMessage());
                 ex.printStackTrace();
