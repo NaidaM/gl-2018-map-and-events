@@ -54,9 +54,7 @@ import org.jose4j.lang.JoseException;
                     privateKeyContent = privateKeyContent.replaceAll("\\r|\\n","")
                             .replace("-----BEGIN PRIVATE KEY-----","")
                             .replace("-----END PRIVATE KEY-----","");
-                    byte[] b1 =  privateKeyContent.getBytes();
-                    byte[] b2 =  publicKeyContent.getBytes();
-
+                    
                    /* Generate private key*/
                     PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyContent));
                     KeyFactory kf = KeyFactory.getInstance("RSA");
