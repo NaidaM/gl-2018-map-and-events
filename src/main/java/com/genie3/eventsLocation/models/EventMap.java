@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -31,13 +32,20 @@ public class EventMap
 
     private User user;
 
+    @NotNull (message = "visibility field is not provide")
+    @Pattern(regexp = "^true|false$+",message = "Private must be a boolean")
+    private String visibility;
+
 
     @JsonCreator
     public EventMap( @JsonProperty("name") String name,
-                     @JsonProperty("description") String description) {
+                     @JsonProperty("description") String description,
+                     @JsonProperty("visibility") String isPrivate
+                     ) {
         this.name = name;
         this.description = description;
         this.places = new ArrayList<Place>();
+        this.setVisibility(isPrivate);
         this.user = null;
 
     }
@@ -87,5 +95,16 @@ public class EventMap
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean  isPrivate() {
+        return Boolean.valueOf(visibility);
+    }
+
+    public void setVisibility(String aPrivate) {
+        visibility = aPrivate;
+    }
+    public String getVisibility() {
+        return visibility;
     }
 }

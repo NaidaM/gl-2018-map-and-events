@@ -42,21 +42,7 @@ public class UploadTEST {
 
 		return Response.status(Response.Status.OK).entity("Ok").build();
     }
-    /*@POST
-    @Path("/image")
-    @Consumes({MediaType.MULTIPART_FORM_DATA})
-    public Response uploadImage(  @FormDataParam("file") InputStream fileInputStream[],
-                                    @FormDataParam("file") FormDataContentDisposition fileMetaData[]) throws Exception
-    {
 
-			for (int i = 0; i< fileInputStream.length;i++){
-				Dao.getImageDAO().upload(fileInputStream[i], fileMetaData[i]);
-			}
-
-
-
-		return Response.status(Response.Status.NOT_FOUND).entity("Ok").build();
-    }*/
 
 	@GET
 	@Path("/download")

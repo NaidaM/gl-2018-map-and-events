@@ -16,4 +16,6 @@ public class PlaceDaoFakeImpl extends Crud<Place> implements PlaceDaoInterface{
 
 		return DB.getPlaces(mapId);
 	}
+
 }
+

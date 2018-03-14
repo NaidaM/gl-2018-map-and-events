@@ -52,7 +52,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
     }
 
 
-    public List<EventMap> readForUser(String pseudo,String[] fields, String whereClause, String orderBy, Integer limit) {
+/*    public List<EventMap> readForUser(String pseudo,String[] fields, String whereClause, String orderBy, Integer limit) {
 
         ArrayList<EventMap> maps = new ArrayList<EventMap>();
         for (int i = 0; i<5;i++){
@@ -69,6 +69,7 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
         //return super.read(fields, whereClause, orderBy, limit);
         return maps;
     }
+    */
 
 	public List<EventMap> readUserMap(String id) throws DaoInternalError {
 
@@ -79,6 +80,17 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 			throw new DaoException.DaoInternalError(e.getMessage());
 		}
 	}
+		@Override
+	public List<EventMap> getPublicMap() throws DaoInternalError {
+
+		try{
+			return DB.getPublicMap();
+		}catch (Exception e) {
+			throw new DaoException.DaoInternalError(e.getMessage());
+		}
+	}
+
+
 
 
 }

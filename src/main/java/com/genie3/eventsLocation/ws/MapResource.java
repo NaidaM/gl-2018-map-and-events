@@ -27,11 +27,19 @@ public class MapResource {
 
 		try {
 			EventMap map =  Dao.getMapDao().get(mapId,"map");
+			ArrayList<Place> places = Dao.getPlaceDao().getPlaceForMap(mapId);
+			map.setPlaces(places);
 			return Response.status(Response.Status.OK).entity(map).build();
 		}
 		catch (DaoException.NotFoundException ex){
 
 			return Response.status(Response.Status.NOT_FOUND)
+					.entity(new Error(ex.getMessage()))
+					.build();
+		}
+		catch (DaoException.DaoInternalError ex){
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(new Error(ex.getMessage()))
 					.build();
 		}
@@ -43,9 +51,19 @@ public class MapResource {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	@PermitAll
-	public List<EventMap> getAll() {
+	public Response getAll() {
 
-		return Dao.getMapDao().read(null,null,null,null);
+		try {
+			List<EventMap> events = Dao.getMapDao().getPublicMap();
+
+			return Response.status(Response.Status.OK).entity(events).build();
+		}	catch (DaoException.DaoInternalError ex){
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Error(ex.getMessage()))
+					.build();
+		}
+
 
 	}
 
@@ -76,7 +94,8 @@ public class MapResource {
 
 		try {
 			 EventMap map = Dao.getMapDao().get(mapId,"map");
-			place.setMap(map);
+			 place.setMap(map);
+			 place.toArray(place.getTaglist());
 			Place p = Dao.getPlaceDao().create(place,"place");
 			p.setMap(null);
 			return Response.status(Response.Status.CREATED).entity(p).build();
@@ -102,7 +121,9 @@ public class MapResource {
 			@PathParam("place_id") String placeId,
 			@NotNull(message = "Post body must not empty")
 			@Valid Place place) {
-		place.setId(placeId);
+
+	    place.setId(placeId);
+        place.toArray(place.getTaglist());
 
 		try {
 			Place p =  Dao.getPlaceDao().update(place,"place");
@@ -127,6 +148,7 @@ public class MapResource {
 
 		try {
 			if(Dao.getPlaceDao().delete(placeId,"place")){
+
 				return Response.status(Response.Status.OK).build();
 			}else {
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

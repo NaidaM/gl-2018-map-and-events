@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 //import java.util.concurrent.ExecutionException;
 
@@ -20,7 +21,11 @@ import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
+
 import org.elasticsearch.rest.RestStatus;
+
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
@@ -109,7 +114,25 @@ public final class DB {
 		TransportClient cl = getClient();
 		try {
 
+
 			DeleteResponse del = cl.prepareDelete(table,table,id).get();
+
+			BulkByScrollResponse response =
+					DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
+							.source("_all")
+							.filter(QueryBuilders.matchQuery("mapId", id))
+							.get();
+
+			BulkByScrollResponse response2 =
+					DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
+							.source("_all")
+							.filter(QueryBuilders.matchQuery("user.id", id))
+							.get();
+
+			response.getDeleted();
+			response2.getDeleted();
+
+
 			if (del.status().equals(RestStatus.OK)){
 				return true;
 			}else {
@@ -177,7 +200,7 @@ public final class DB {
 			        .field("description", place.getDescription())
 			        .field("latitude", place.getLatitude())
 			        .field("longitude", place.getLongitude())
-			        .field("category", place.getcategory())
+			        .field("tags", place.getTags())
 			    .endObject();
 		
 		return builder;
@@ -189,6 +212,7 @@ public final class DB {
 					builder 
 			        .field("name", map.getName())
 			        .field("description", map.getDescription())
+			        .field("isPrivate", map.isPrivate())
 			    .endObject();
 		
 		return builder;	}
@@ -202,7 +226,7 @@ public final class DB {
 			        .field("latitude", place.getLatitude())
 			        .field("longitude", place.getLongitude())
 			        .field("description", place.getDescription())
-			        .field("category", place.getcategory())
+			        .field("tags", place.getTags())
 			        .field("mapId",place.getMap().getId())
 			    .endObject();
 		
@@ -211,11 +235,14 @@ public final class DB {
 	
 	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
 		
-
-		 			builder 
+		     HashMap<String,String> user = new HashMap<String, String>();
+		     user.put("id",map.getUser().getId());
+		     user.put("pseudo",map.getUser().getPseudo());
+		 			builder
 			        .field("name", map.getName())
 			        .field("description", map.getDescription())
-			        .field("userId",map.getUser().getId())
+			        .field("isPrivate", map.isPrivate())
+			        .field("user",user)
 			    .endObject();
 		
 		return builder;	}
@@ -286,8 +313,12 @@ public final class DB {
 			eventMap.setId(id);
 			eventMap.setName((String) map.get("name"));
 			eventMap.setDescription((String)map.get("description"));
+			eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
 
-			User u = DB.get((String)map.get("userId"),"user");
+			User u = new User();
+			Map<String, String> mapuser = (Map<String, String> ) map.get("user");
+			u.setId(mapuser.get("id"));
+			u.setPseudo((mapuser.get("pseudo")));
 			u.setMaps(null);
 			eventMap.setUser(u);
 
@@ -332,9 +363,13 @@ public final class DB {
 					place.setId(searchHit[i].getId());
 					place.setName((String)map.get("name"));
 					place.setDescription((String)map.get("description"));
+					place.setDescription((String)map.get("description"));
 					place.setLatitude((String)map.get("latitude"));
 					place.setLongitude((String)map.get("longitude"));
-					place.setcategory((String)map.get("category"));
+					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+					String tab [] = new String[tags.size()];
+					tab = tags.toArray(tab);
+					place.setTags(tab);
 					
 					places.add(place);
 				}
@@ -365,9 +400,6 @@ public final class DB {
 			SearchHit[] searchHit= res.getHits().getHits();
 
 			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
-			System.out.println("hits " + res.getHits().totalHits);
-			System.out.println("Id " + userId);
-			System.out.println("Length " + searchHit.length);
 			if(searchHit.length !=0 ) {
 				
 				for(int i=0; i<searchHit.length; i++) {
@@ -380,6 +412,58 @@ public final class DB {
 					eventMap.setDescription((String)map.get("description"));
 					eventMap.setPlaces(null);
 					eventMaps.add(eventMap);
+				}
+			}
+			return eventMaps;
+
+
+		}catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
+
+
+	}
+
+
+
+	public static ArrayList<EventMap> getPublicMap() throws DaoInternalError  {
+		TransportClient cl = getClient();
+
+		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
+
+
+		try {
+			SearchResponse res = cl.prepareSearch(mapIndex)
+					.setTypes(mapIndex)
+					.setQuery(QueryBuilders.matchQuery("isPrivate",false)).get();
+
+			/*SearchResponse res= cl.prepareSearch(mapIndex)
+					.setTypes(mapIndex)
+					.setQuery(qb)
+					.get();*/
+
+			SearchHit[] searchHit= res.getHits().getHits();
+
+			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
+			if(searchHit.length !=0 ) {
+
+				for(int i=0; i<searchHit.length; i++) {
+
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					EventMap eventMap= new EventMap();
+
+					eventMap.setId(searchHit[i].getId());
+					eventMap.setName((String)map.get("name"));
+					eventMap.setDescription((String)map.get("description"));
+					eventMap.setPlaces(null);
+					eventMaps.add(eventMap);
+
+					User u = new User();
+					Map<String, String> mapuser = (Map<String, String> ) map.get("user");
+					u.setId(mapuser.get("id"));
+					u.setPseudo((mapuser.get("pseudo")));
+					u.setMaps(null);
+					eventMap.setUser(u);
 				}
 			}
 			return eventMaps;

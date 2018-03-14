@@ -5,11 +5,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
@@ -56,6 +54,9 @@ import org.jose4j.lang.JoseException;
                             .replace("-----END PRIVATE KEY-----","");
                     
                    /* Generate private key*/
+
+
+
                     PKCS8EncodedKeySpec ks = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(privateKeyContent));
                     KeyFactory kf = KeyFactory.getInstance("RSA");
                     PrivateKey pvt = kf.generatePrivate(ks);
@@ -81,22 +82,9 @@ import org.jose4j.lang.JoseException;
                rsaJsonWebKey.setKeyId(publicKeyContent);
 
 
-            }catch (NullPointerException ex){
-                ex.printStackTrace();
             }
-            catch (InvalidKeySpecException ex){
-               // System.out.println("1 - " + ex.getMessage());
-               logger.warn("1 - " + ex.getMessage());
-                ex.printStackTrace();
-            }catch (NoSuchAlgorithmException ex){
 
-                logger.warn("1 - " + ex.getMessage());
-                //System.out.println("2 - " + ex.getMessage());
-                ex.printStackTrace();
-            }
             catch (Exception ex){
-
-                logger.warn("1 - " + ex.getMessage());
                 ex.printStackTrace();
             }
         }

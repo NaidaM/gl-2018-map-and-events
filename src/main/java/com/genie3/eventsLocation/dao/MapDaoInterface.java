@@ -7,9 +7,9 @@ import java.util.List;
 
 
 public interface MapDaoInterface extends CrudInterface<EventMap>{
-
-    List<EventMap> readForUser(String pseudo ,String[] fields, String whereClause,String orderBy,Integer limit);
     
     List<EventMap> readUserMap(String id) throws DaoInternalError;
+    List<EventMap> getPublicMap() throws DaoInternalError;
+
     
 }
