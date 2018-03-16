@@ -24,7 +24,6 @@ public class User
     private String pseudo;
 
     @Email(message = "please provide a valid email")
-
     private String email;
 
     @NotNull(message = "Password field is not provide")

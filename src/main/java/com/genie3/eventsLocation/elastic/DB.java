@@ -198,14 +198,14 @@ public final class DB {
 	public static XContentBuilder updatePlace(Place place,XContentBuilder builder)  throws IOException {
 
 		builder = jsonBuilder()
-				.startObject()
-				.field("name", place.getName())
-				.field("description", place.getDescription())
-				.field("latitude", place.getLatitude())
-				.field("longitude", place.getLongitude())
-				.field("tags", place.getTags())
-				.endObject();
 
+			    .startObject()
+			        .field("name", place.getName())
+			        .field("description", place.getDescription())
+			        .field("latitude", place.getLatitude())
+			        .field("longitude", place.getLongitude())
+
+			    .endObject();
 
 		return builder;
 	}
@@ -213,41 +213,42 @@ public final class DB {
 	public static XContentBuilder updateMap(EventMap map,XContentBuilder builder) throws IOException {
 
 
-		builder 
-		.field("name", map.getName())
-		.field("description", map.getDescription())
-		.field("isPrivate", map.isPrivate())
-		.endObject();
+					builder 
+			        .field("name", map.getName())
+			        .field("description", map.getDescription())
+			        .field("isPrivate", map.isPrivate())
+					.field("tags", map.getTags())
+			    .endObject();
 
 		return builder;	}
 
 
 	public static XContentBuilder createPlace(Place place,XContentBuilder builder)  throws IOException {
 
-
-		builder
-		.field("name", place.getName())
-		.field("latitude", place.getLatitude())
-		.field("longitude", place.getLongitude())
-		.field("description", place.getDescription())
-		.field("tags", place.getTags())
-		.field("mapId",place.getMap().getId())
-		.endObject();
+		
+					builder
+			        .field("name", place.getName())
+			        .field("latitude", place.getLatitude())
+			        .field("longitude", place.getLongitude())
+			        .field("description", place.getDescription())
+			        .field("mapId",place.getMap().getId())
+			    .endObject();
 
 		return builder;
 	}
 
 	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
 
-		HashMap<String,String> user = new HashMap<String, String>();
-		user.put("id",map.getUser().getId());
-		user.put("pseudo",map.getUser().getPseudo());
-		builder
-		.field("name", map.getName())
-		.field("description", map.getDescription())
-		.field("isPrivate", map.isPrivate())
-		.field("user",user)
-		.endObject();
+		     HashMap<String,String> user = new HashMap<String, String>();
+		     user.put("id",map.getUser().getId());
+		     user.put("pseudo",map.getUser().getPseudo());
+		 			builder
+			        .field("name", map.getName())
+			        .field("description", map.getDescription())
+			        .field("isPrivate", map.isPrivate())
+			        .field("user",user)
+							.field("tags", map.getTags())
+			    .endObject();
 
 		return builder;	}
 
@@ -371,10 +372,6 @@ public final class DB {
 					place.setDescription((String)map.get("description"));
 					place.setLatitude((String)map.get("latitude"));
 					place.setLongitude((String)map.get("longitude"));
-					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
-					String tab [] = new String[tags.size()];
-					tab = tags.toArray(tab);
-					place.setTags(tab);
 
 					places.add(place);
 				}
@@ -387,9 +384,9 @@ public final class DB {
 	}
 
 
-	public void test() {
 
-	}
+	@SuppressWarnings({"unchecked"})
+
 	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError  {
 		TransportClient cl = getClient();
 
@@ -399,7 +396,7 @@ public final class DB {
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
-					.setQuery(QueryBuilders.matchQuery("userId",userId)).get();
+					.setQuery(QueryBuilders.matchQuery("user.id",userId)).get();
 
 			/*SearchResponse res= cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
@@ -420,6 +417,9 @@ public final class DB {
 					eventMap.setName((String)map.get("name"));
 					eventMap.setDescription((String)map.get("description"));
 					eventMap.setPlaces(null);
+					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+
+					eventMap.setTags(tags);
 					eventMaps.add(eventMap);
 				}
 			}
@@ -434,7 +434,7 @@ public final class DB {
 	}
 
 
-
+	@SuppressWarnings({"unchecked"})
 	public static ArrayList<EventMap> getPublicMap() throws DaoInternalError  {
 		TransportClient cl = getClient();
 
@@ -465,6 +465,10 @@ public final class DB {
 					eventMap.setDescription((String)map.get("description"));
 					eventMap.setPlaces(null);
 					eventMaps.add(eventMap);
+
+					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+
+					eventMap.setTags(tags);
 
 					User u = new User();
 					Map<String, String> mapuser = (Map<String, String> ) map.get("user");

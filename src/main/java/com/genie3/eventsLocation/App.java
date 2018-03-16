@@ -3,6 +3,7 @@ package com.genie3.eventsLocation;
 import com.genie3.eventsLocation.exception.ApplicationExceptionMapper;
 import com.genie3.eventsLocation.exception.ValidationExceptionMapper;
 import com.genie3.eventsLocation.filters.AuthentificationFilter;
+import com.genie3.eventsLocation.filters.CORSFilter;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -47,6 +48,7 @@ public class App {
          rc.register(ValidationFeature.class);
          rc.register(MultiPartFeature.class);
          rc.register(AuthentificationFilter.class);
+         rc.register(CORSFilter.class);
 
         // Add a servlet handler for web services (/ws/*)
         ServletHolder servletHolder = new ServletHolder(new ServletContainer(rc));

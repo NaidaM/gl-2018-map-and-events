@@ -43,21 +43,14 @@ public  class Place {
     private EventMap map;
 
 
-    @NotNull
-    @Pattern(regexp="\\[[_ A-Za-z0-9 ]*(,[_ A-Za-z0-9]+)*\\]")
-    @JsonIgnore
-    private String taglist;
 
-
-    private  String[] tags ;
 
 
     @JsonCreator
     public Place( @JsonProperty("name") String name,
                   @JsonProperty("description") String description,
                   @JsonProperty("latitude") String latitude,
-                  @JsonProperty("longitude") String longitude,
-                  @JsonProperty("taglist") String tags
+                  @JsonProperty("longitude") String longitude
                   ) {
 
         this.name = name;
@@ -65,13 +58,11 @@ public  class Place {
         this.longitude =longitude;
         this.latitude = latitude;
         this.map = null;
-        this.taglist = tags;
 
     }
 
     public Place() {
         this.map = null;
-        this.tags = new String[1];
     }
 
 
@@ -83,13 +74,7 @@ public  class Place {
         this.id = id;
     }
 
-    public String[] getTags() {
-        return tags;
-    }
 
-    public void setTags(String[] tags) {
-        this.tags = tags;
-    }
     
     public String getName() {
         return name;
@@ -131,23 +116,6 @@ public  class Place {
         this.map = map;
     }
 
-    public String getTaglist() {
-        return taglist;
-    }
-
-    public void setTaglist(String taglist) {
-        this.taglist = taglist;
-    }
-
-    public void toArray(String tags){
-        String s = tags.replaceAll("\\[","")
-                .replaceAll("\\]","");
-
-        String tmp[] =s.split(",");
-
-        this.setTags(tmp);
-
-    }
 
     @Override
     public String toString() {

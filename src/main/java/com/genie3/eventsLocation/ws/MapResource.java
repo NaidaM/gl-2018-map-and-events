@@ -95,7 +95,6 @@ public class MapResource {
 		try {
 			 EventMap map = Dao.getMapDao().get(mapId,"map");
 			 place.setMap(map);
-			 place.toArray(place.getTaglist());
 			Place p = Dao.getPlaceDao().create(place,"place");
 			p.setMap(null);
 			return Response.status(Response.Status.CREATED).entity(p).build();
@@ -123,7 +122,7 @@ public class MapResource {
 			@Valid Place place) {
 
 	    place.setId(placeId);
-        place.toArray(place.getTaglist());
+
 
 		try {
 			Place p =  Dao.getPlaceDao().update(place,"place");

@@ -122,6 +122,7 @@ public class UserResource {
 
             User u =  Dao.getUserDao().getWithPseudo(pseudo);
             map.setUser(u);
+            map.toArray(map.getTaglist());
 
             EventMap eventMap =  Dao.getMapDao().create(map,"map");
 
@@ -153,7 +154,9 @@ public class UserResource {
         try {
 
             map.setId(mapIp);
+            map.toArray(map.getTaglist());
             EventMap map1 = Dao.getMapDao().update(map,"map");
+
             return Response.status(Response.Status.OK).entity(map1).build();
         }catch (DaoException.DaoInternalError ex){
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Error(ex.getMessage())).build();
