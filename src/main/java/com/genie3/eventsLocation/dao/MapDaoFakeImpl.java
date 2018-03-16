@@ -80,7 +80,8 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 			throw new DaoException.DaoInternalError(e.getMessage());
 		}
 	}
-		@Override
+		
+	
 	public List<EventMap> getPublicMap() throws DaoInternalError {
 
 		try{
