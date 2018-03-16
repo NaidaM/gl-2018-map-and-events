@@ -19,6 +19,8 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 
@@ -80,13 +82,13 @@ public final class DB {
 				return (T) user;
 			}
 			if (t instanceof Place) {
-					Place place = (Place)t;
-					builder = createPlace(place,builder);
-					IndexResponse resp = client.prepareIndex(placeIndex, table)
-							.setSource(builder)
-							.get();
-					place.setId(resp.getId());
-					return (T) place;
+				Place place = (Place)t;
+				builder = createPlace(place,builder);
+				IndexResponse resp = client.prepareIndex(placeIndex, table)
+						.setSource(builder)
+						.get();
+				place.setId(resp.getId());
+				return (T) place;
 			}
 			if (t instanceof EventMap) {
 				EventMap map = (EventMap)t;
@@ -94,12 +96,12 @@ public final class DB {
 				IndexResponse resp = client.prepareIndex(mapIndex, table)
 						.setSource(builder)
 						.get();
-				 map.setId(resp.getId());
-				 return (T) map;
+				map.setId(resp.getId());
+				return (T) map;
 			}
-						
-				else {
-				
+
+			else {
+
 				throw new  DaoException.DaoInternalError("Sorry , this Object not yet implemented");
 			}
 
@@ -119,15 +121,15 @@ public final class DB {
 
 			BulkByScrollResponse response =
 					DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
-							.source("_all")
-							.filter(QueryBuilders.matchQuery("mapId", id))
-							.get();
+					.source("_all")
+					.filter(QueryBuilders.matchQuery("mapId", id))
+					.get();
 
 			BulkByScrollResponse response2 =
 					DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
-							.source("_all")
-							.filter(QueryBuilders.matchQuery("user.id", id))
-							.get();
+					.source("_all")
+					.filter(QueryBuilders.matchQuery("user.id", id))
+					.get();
 
 			response.getDeleted();
 			response2.getDeleted();
@@ -194,58 +196,61 @@ public final class DB {
 	}
 
 	public static XContentBuilder updatePlace(Place place,XContentBuilder builder)  throws IOException {
+
 		builder = jsonBuilder()
-			    .startObject()
-			        .field("name", place.getName())
-			        .field("description", place.getDescription())
-			        .field("latitude", place.getLatitude())
-			        .field("longitude", place.getLongitude())
-			        .field("tags", place.getTags())
-			    .endObject();
-		
+				.startObject()
+				.field("name", place.getName())
+				.field("description", place.getDescription())
+				.field("latitude", place.getLatitude())
+				.field("longitude", place.getLongitude())
+				.field("tags", place.getTags())
+				.endObject();
+
+
 		return builder;
 	}
 
 	public static XContentBuilder updateMap(EventMap map,XContentBuilder builder) throws IOException {
-		
 
-					builder 
-			        .field("name", map.getName())
-			        .field("description", map.getDescription())
-			        .field("isPrivate", map.isPrivate())
-			    .endObject();
-		
+
+		builder 
+		.field("name", map.getName())
+		.field("description", map.getDescription())
+		.field("isPrivate", map.isPrivate())
+		.endObject();
+
 		return builder;	}
 
-	
+
 	public static XContentBuilder createPlace(Place place,XContentBuilder builder)  throws IOException {
-		
-		
-					builder
-			        .field("name", place.getName())
-			        .field("latitude", place.getLatitude())
-			        .field("longitude", place.getLongitude())
-			        .field("description", place.getDescription())
-			        .field("tags", place.getTags())
-			        .field("mapId",place.getMap().getId())
-			    .endObject();
-		
+
+
+		builder
+		.field("name", place.getName())
+		.field("latitude", place.getLatitude())
+		.field("longitude", place.getLongitude())
+		.field("description", place.getDescription())
+		.field("tags", place.getTags())
+		.field("mapId",place.getMap().getId())
+		.endObject();
+
 		return builder;
 	}
-	
+
 	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
-		
-		     HashMap<String,String> user = new HashMap<String, String>();
-		     user.put("id",map.getUser().getId());
-		     user.put("pseudo",map.getUser().getPseudo());
-		 			builder
-			        .field("name", map.getName())
-			        .field("description", map.getDescription())
-			        .field("isPrivate", map.isPrivate())
-			        .field("user",user)
-			    .endObject();
-		
+
+		HashMap<String,String> user = new HashMap<String, String>();
+		user.put("id",map.getUser().getId());
+		user.put("pseudo",map.getUser().getPseudo());
+		builder
+		.field("name", map.getName())
+		.field("description", map.getDescription())
+		.field("isPrivate", map.isPrivate())
+		.field("user",user)
+		.endObject();
+
 		return builder;	}
+
 	public static XContentBuilder createUser(User user,XContentBuilder builder) throws IOException {
 
 		builder.field("pseudo", user.getPseudo())
@@ -254,9 +259,9 @@ public final class DB {
 		.field("token", user.getToken())
 		.field("role", user.getRole())
 		.endObject();
-		
+
 		return builder;	}
-	
+
 
 	public static User getUserWithPseudo(String name) throws DaoException.NotFoundException{
 		TransportClient cl = getClient();
@@ -293,7 +298,7 @@ public final class DB {
 		GetResponse res= cl.prepareGet(table,table,id).get();
 
 		if(!res.isExists())
-            throw new  DaoException.NotFoundException("No data found for id : "+id);
+			throw new  DaoException.NotFoundException("No data found for id : "+id);
 		if(table.equals("user")){
 			Map<String, Object> map = res.getSourceAsMap();
 			User user = new User();
@@ -333,7 +338,7 @@ public final class DB {
 			throw new  DaoException.NotFoundException("Sorry , this Object not yet implemented");
 		}
 
-		
+
 
 	}
 
@@ -354,7 +359,7 @@ public final class DB {
 			SearchHit[] searchHit= res.getHits().getHits();
 
 			if(searchHit.length !=0 ) {
-				
+
 				for(int i=0; i<searchHit.length; i++) {
 
 					Map<String, Object> map = searchHit[i].getSourceAsMap();
@@ -370,7 +375,7 @@ public final class DB {
 					String tab [] = new String[tags.size()];
 					tab = tags.toArray(tab);
 					place.setTags(tab);
-					
+
 					places.add(place);
 				}
 			}
@@ -380,7 +385,11 @@ public final class DB {
 		}
 
 	}
-	
+
+
+	public void test() {
+
+	}
 	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError  {
 		TransportClient cl = getClient();
 
@@ -401,7 +410,7 @@ public final class DB {
 
 			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
 			if(searchHit.length !=0 ) {
-				
+
 				for(int i=0; i<searchHit.length; i++) {
 
 					Map<String, Object> map = searchHit[i].getSourceAsMap();
@@ -430,7 +439,6 @@ public final class DB {
 		TransportClient cl = getClient();
 
 		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
-
 
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
@@ -500,6 +508,48 @@ public final class DB {
 
 	static String HashPwd(String password) {
 		return BCrypt.hashpw(password, BCrypt.gensalt(15));
+	}
+	
+	//return map with places with tags search
+	public SearchHit[] searchPublicMapTags(String[] search) {
+		TransportClient cl= getClient();
+		BoolQueryBuilder qb= QueryBuilders.boolQuery()
+				.should(QueryBuilders.termQuery("tags", search))
+				.minimumShouldMatch(1);
+		SearchResponse res= cl.prepareSearch(placeIndex)
+				.setTypes(placeIndex)
+				.setQuery(qb)
+				.get();
+		SearchHit[] tab = res.getHits().getHits();
+		String[] tabid= new String[tab.length];
+		
+		for(int i=0; i<tab.length; i++) {
+			tabid[i]= tab[i].getId();
+		}
+		
+		return MapSearch(queryMapID(tabid, false));
+	}
+
+	// return query for map with id id, if priv is true search private and public map else only public map
+	public QueryBuilder queryMapID(String[] id, boolean priv) {
+		BoolQueryBuilder qb= QueryBuilders.boolQuery();
+		
+		if(!priv)
+			qb.mustNot(QueryBuilders.termQuery("isPrivate", false));
+		qb.filter(QueryBuilders.idsQuery(mapIndex).addIds(id));
+		
+		return qb;
+	}
+
+	//search a map using the query qb
+	public static SearchHit[] MapSearch(QueryBuilder qb) {
+		TransportClient cl = getClient();
+		SearchResponse res= cl.prepareSearch(mapIndex)
+				.setTypes(mapIndex)
+				.setQuery(qb)
+				.get();
+
+		return res.getHits().getHits();
 	}
 
 
