@@ -71,11 +71,14 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
     }
     */
 
-	public List<EventMap> readUserMap(String id) throws DaoInternalError {
+	public List<EventMap> readUserMap(String id) throws DaoInternalError,DaoException.NotFoundException {
 
 		try{
 			return DB.getUserMap(id);
-		}catch (Exception e) {
+		}catch (DaoException.NotFoundException ex){
+			throw new DaoException.NotFoundException(ex.getMessage());
+		}
+		catch (Exception e) {
 
 			throw new DaoException.DaoInternalError(e.getMessage());
 		}
