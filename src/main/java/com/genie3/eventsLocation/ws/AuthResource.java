@@ -77,7 +77,8 @@ public class AuthResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
-    public Response create(@NotNull(message = "Post body must not empty") @Valid @ValidPassword User user)  {
+    public Response create(@NotNull(message = "Post body must not empty")
+                               @Valid @ValidPassword User user)  {
 
         try {
             user.setRole("user");

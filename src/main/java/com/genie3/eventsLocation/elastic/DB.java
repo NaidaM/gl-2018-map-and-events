@@ -19,6 +19,7 @@ import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.index.IndexNotFoundException;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -55,6 +56,12 @@ public final class DB {
 			try {
 				client = new PreBuiltTransportClient(Settings.EMPTY)
 						.addTransportAddress(new TransportAddress(InetAddress.getByName(host), port));
+
+				if(client.connectedNodes().isEmpty()){
+					System.out.println("NULL");
+				}
+
+
 			}catch (UnknownHostException ex){
 				ex.printStackTrace();
 			}
@@ -296,51 +303,47 @@ public final class DB {
 	public static <T> T get(String id,String table) throws  DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
-		GetResponse res= cl.prepareGet(table,table,id).get();
+		try {
+			GetResponse res = cl.prepareGet(table, table, id).get();
 
-		if(!res.isExists())
-			throw new  DaoException.NotFoundException("No data found for id : "+id);
-		if(table.equals("user")){
-			Map<String, Object> map = res.getSourceAsMap();
-			User user = new User();
-			user.setId(id);
-			user.setEmail((String) map.get("email"));
-			user.setPseudo((String)map.get("pseudo"));
-			user.setToken((String)map.get("token"));
-			user.setRole((String) map.get("role"));
-			user.setPassword((String) map.get("password"));
-			return (T) user;
+			if (!res.isExists())
+				throw new DaoException.NotFoundException("No data found for id : " + id);
+			if (table.equals("user")) {
+				Map<String, Object> map = res.getSourceAsMap();
+				User user = new User();
+				user.setId(id);
+				user.setEmail((String) map.get("email"));
+				user.setPseudo((String) map.get("pseudo"));
+				user.setToken((String) map.get("token"));
+				user.setRole((String) map.get("role"));
+				user.setPassword((String) map.get("password"));
+				return (T) user;
+			} else if (table.equals("map")) {
+				Map<String, Object> map = res.getSourceAsMap();
+				EventMap eventMap = new EventMap();
+
+				eventMap.setId(id);
+				eventMap.setName((String) map.get("name"));
+				eventMap.setDescription((String) map.get("description"));
+				eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
+
+				User u = new User();
+				Map<String, String> mapuser = (Map<String, String>) map.get("user");
+				u.setId(mapuser.get("id"));
+				u.setPseudo((mapuser.get("pseudo")));
+				u.setMaps(null);
+				eventMap.setUser(u);
+
+
+				return (T) eventMap;
+			}
+			else {
+
+				throw new  DaoException.NotFoundException("Sorry , this Object not yet implemented");
+			}
+		}catch (IndexNotFoundException ex){
+			throw new  DaoException.NotFoundException("No data found");
 		}
-
-		else if(table.equals("map")){
-			Map<String, Object> map = res.getSourceAsMap();
-			EventMap eventMap = new EventMap();
-
-			eventMap.setId(id);
-			eventMap.setName((String) map.get("name"));
-			eventMap.setDescription((String)map.get("description"));
-			eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
-
-			User u = new User();
-			Map<String, String> mapuser = (Map<String, String> ) map.get("user");
-			u.setId(mapuser.get("id"));
-			u.setPseudo((mapuser.get("pseudo")));
-			u.setMaps(null);
-			eventMap.setUser(u);
-
-
-			return (T) eventMap;
-		}
-
-
-
-		else {
-
-			throw new  DaoException.NotFoundException("Sorry , this Object not yet implemented");
-		}
-
-
-
 	}
 
 	public static ArrayList<Place> getPlaces(String mapId) throws DaoInternalError  {
@@ -387,7 +390,7 @@ public final class DB {
 
 	@SuppressWarnings({"unchecked"})
 
-	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError  {
+	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
 		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
@@ -398,10 +401,6 @@ public final class DB {
 					.setTypes(mapIndex)
 					.setQuery(QueryBuilders.matchQuery("user.id",userId)).get();
 
-			/*SearchResponse res= cl.prepareSearch(mapIndex)
-					.setTypes(mapIndex)
-					.setQuery(qb)
-					.get();*/
 
 			SearchHit[] searchHit= res.getHits().getHits();
 
@@ -426,7 +425,10 @@ public final class DB {
 			return eventMaps;
 
 
-		}catch (Exception ex){
+		}catch (IndexNotFoundException ex){
+			throw new  DaoException.NotFoundException("No data found");
+		}
+		catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
 
@@ -435,7 +437,7 @@ public final class DB {
 
 
 	@SuppressWarnings({"unchecked"})
-	public static ArrayList<EventMap> getPublicMap() throws DaoInternalError  {
+	public static ArrayList<EventMap> getPublicMap() throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
 		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
@@ -481,7 +483,11 @@ public final class DB {
 			return eventMaps;
 
 
-		}catch (Exception ex){
+		}catch (IndexNotFoundException ex){
+
+			throw new  DaoException.NotFoundException("No data found");
+		}
+		catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
 

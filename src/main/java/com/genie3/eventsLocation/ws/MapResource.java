@@ -57,7 +57,12 @@ public class MapResource {
 			List<EventMap> events = Dao.getMapDao().getPublicMap();
 
 			return Response.status(Response.Status.OK).entity(events).build();
-		}	catch (DaoException.DaoInternalError ex){
+
+		}catch (DaoException.NotFoundException ex){
+
+			return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
+		}
+		catch (DaoException.DaoInternalError ex){
 
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity(new Error(ex.getMessage()))

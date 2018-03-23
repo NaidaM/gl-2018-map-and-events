@@ -98,9 +98,9 @@ public class UserResource {
 				return Response.status(Response.Status.OK).entity(u).build();
 			}catch (DaoException.NotFoundException ex){
                 Error error= new Error(ex.getMessage());
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+                return Response.status(Response.Status.NOT_FOUND).entity(error).build();
 			}catch (DaoInternalError e) {
-				// TODO Auto-generated catch block
+
 				Error error= new Error(e.getMessage());
 				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
 			}
