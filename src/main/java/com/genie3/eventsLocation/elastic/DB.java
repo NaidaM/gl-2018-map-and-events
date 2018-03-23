@@ -399,24 +399,24 @@ public final class DB {
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
-					.setQuery(QueryBuilders.matchQuery("user.id",userId)).get();
+					.setQuery(QueryBuilders.matchQuery("user.id", userId)).get();
 
 
-			SearchHit[] searchHit= res.getHits().getHits();
+			SearchHit[] searchHit = res.getHits().getHits();
 
-			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
-			if(searchHit.length !=0 ) {
+			ArrayList<EventMap> eventMaps = new ArrayList<EventMap>();
+			if (searchHit.length != 0) {
 
-				for(int i=0; i<searchHit.length; i++) {
+				for (int i = 0; i < searchHit.length; i++) {
 
 					Map<String, Object> map = searchHit[i].getSourceAsMap();
-					EventMap eventMap= new EventMap();
+					EventMap eventMap = new EventMap();
 
 					eventMap.setId(searchHit[i].getId());
-					eventMap.setName((String)map.get("name"));
-					eventMap.setDescription((String)map.get("description"));
+					eventMap.setName((String) map.get("name"));
+					eventMap.setDescription((String) map.get("description"));
 					eventMap.setPlaces(null);
-					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+					ArrayList<String> tags = (ArrayList<String>) map.get("tags");
 
 					eventMap.setTags(tags);
 					eventMaps.add(eventMap);
@@ -425,14 +425,14 @@ public final class DB {
 			return eventMaps;
 
 
-		}catch (IndexNotFoundException ex){
-			throw new  DaoException.NotFoundException("No data found");
-		}
-		catch (Exception ex){
-			throw new DaoException.DaoInternalError(ex.getMessage());
-		}
+		} catch (Exception ex) {
 
-
+			if (ex instanceof IndexNotFoundException) {
+				throw new DaoException.NotFoundException("No map data found for user: " + userId);
+			} else {
+				throw new DaoException.DaoInternalError(ex.getMessage());
+			}
+		}
 	}
 
 

@@ -96,9 +96,13 @@ public class UserResource {
 				maps = Dao.getMapDao().readUserMap(u.getId());
 				u.setMaps(maps);
 				return Response.status(Response.Status.OK).entity(u).build();
+
 			}catch (DaoException.NotFoundException ex){
+
                 Error error= new Error(ex.getMessage());
+
                 return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+
 			}catch (DaoInternalError e) {
 
 				Error error= new Error(e.getMessage());
