@@ -514,16 +514,21 @@ public final class DB {
 		return BCrypt.hashpw(password, BCrypt.gensalt(15));
 	}
 	
-	//return map with places with tags search
-	public SearchHit[] searchPublicMapTags(String[] search) {
+	//return map with places tags search
+	public SearchHit[] searchPublicMapTagsPlace(String[] search) {
 		TransportClient cl= getClient();
+		
 		BoolQueryBuilder qb= QueryBuilders.boolQuery()
-				.should(QueryBuilders.termQuery("tags", search))
 				.minimumShouldMatch(1);
+		for(String s : search) {
+			qb.should(QueryBuilders.termQuery("tags", s));
+		}
+		
 		SearchResponse res= cl.prepareSearch(placeIndex)
 				.setTypes(placeIndex)
 				.setQuery(qb)
 				.get();
+		
 		SearchHit[] tab = res.getHits().getHits();
 		String[] tabid= new String[tab.length];
 		
@@ -531,7 +536,7 @@ public final class DB {
 			tabid[i]= tab[i].getId();
 		}
 		
-		return MapSearch(queryMapID(tabid, false));
+		return mapSearch(queryMapID(tabid, false));
 	}
 
 	// return query for map with id id, if priv is true search private and public map else only public map
@@ -540,13 +545,14 @@ public final class DB {
 		
 		if(!priv)
 			qb.mustNot(QueryBuilders.termQuery("isPrivate", false));
-		qb.filter(QueryBuilders.idsQuery(mapIndex).addIds(id));
+		qb.should(QueryBuilders.idsQuery(mapIndex).addIds(id))
+		.minimumShouldMatch(1);
 		
 		return qb;
 	}
 
 	//search a map using the query qb
-	public static SearchHit[] MapSearch(QueryBuilder qb) {
+	public static SearchHit[] mapSearch(QueryBuilder qb) {
 		TransportClient cl = getClient();
 		SearchResponse res= cl.prepareSearch(mapIndex)
 				.setTypes(mapIndex)
@@ -556,5 +562,19 @@ public final class DB {
 		return res.getHits().getHits();
 	}
 
+	// search map by using it tags
+	public static SearchHit[] searchPublicMapTags(String[] tags) {
+		TransportClient cl= getClient();
+		BoolQueryBuilder qb= QueryBuilders.boolQuery()
+				.minimumShouldMatch(1);
+		for(String s : tags) {
+			qb.should(QueryBuilders.termQuery("tags", s));
+		}
+		SearchResponse res = cl.prepareSearch(mapIndex)
+				.setTypes(mapIndex)
+				.setQuery(qb)
+				.get();
+		return res.getHits().getHits();
+	}
 
 }
