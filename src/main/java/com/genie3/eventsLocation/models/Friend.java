@@ -6,36 +6,36 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 
-public class Tag {
+public class Friend {
 
 
-    private String name;
+    private String pseudo;
 
-    public Tag(){
-        this.name = "";
+    public Friend(){
+        this.pseudo = "";
     }
 
     @JsonCreator
-    public Tag(@JsonProperty("name") String name){
+    public Friend(@JsonProperty("pseudo") String pseudo){
 
-        this.name = name;
+        this.pseudo = pseudo;
     }
 
 
     @NotNull
     @NotEmpty
-    public String getName() {
-        return name;
+    public String getPseudo() {
+        return pseudo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPseudo(String name) {
+        this.pseudo = name;
     }
 
     @Override
     public String toString() {
-        return "Tag{" +
-                "name='" + name + '\'' +
+        return "Friend{" +
+                "pseudo='" + pseudo + '\'' +
                 '}';
     }
 }

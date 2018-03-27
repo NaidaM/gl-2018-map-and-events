@@ -106,9 +106,6 @@ public class User
         this.password = password;
     }
 
-    public void setPasswordConfirmation(String passwordConfirmation) {
-        this.passwordConfirmation = passwordConfirmation;
-    }
 
     public List<EventMap> getMaps() {
         return maps;

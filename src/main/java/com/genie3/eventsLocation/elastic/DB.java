@@ -1,15 +1,8 @@
 package com.genie3.eventsLocation.elastic;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-//import java.util.concurrent.ExecutionException;
-
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.models.*;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -24,20 +17,24 @@ import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
-
-import org.elasticsearch.rest.RestStatus;
-
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
+import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
 
-import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
-import com.genie3.eventsLocation.models.EventMap;
-import com.genie3.eventsLocation.models.Place;
-import com.genie3.eventsLocation.models.User;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+
+//import java.util.concurrent.ExecutionException;
 
 
 public final class DB {
@@ -219,13 +216,24 @@ public final class DB {
 
 	public static XContentBuilder updateMap(EventMap map,XContentBuilder builder) throws IOException {
 
+		List<String> tags = new ArrayList<String>();
+		for (int i = 0;i<map.getTags().size();i++){
+			tags.add(map.getTags().get(i).getName());
+		}
 
-					builder 
-			        .field("name", map.getName())
-			        .field("description", map.getDescription())
-			        .field("isPrivate", map.isPrivate())
-					.field("tags", map.getTags())
-			    .endObject();
+		List<String> friends = new ArrayList<String>();
+		for (int i = 0;i<map.getFriends().size();i++){
+			friends.add(map.getFriends().get(i).getPseudo());
+		}
+
+
+		builder
+		.field("name", map.getName())
+		.field("description", map.getDescription())
+		.field("isPrivate", Boolean.valueOf(map.getIsPrivate()))
+		.field("tags", tags)
+		.field("friends", friends)
+		.endObject();
 
 		return builder;	}
 
@@ -247,14 +255,27 @@ public final class DB {
 	public static XContentBuilder createMap(EventMap map,XContentBuilder builder) throws IOException {
 
 		     HashMap<String,String> user = new HashMap<String, String>();
+		     List<String> tags = new ArrayList<String>();
+		     for (int i = 0;i<map.getTags().size();i++){
+		         tags.add(map.getTags().get(i).getName());
+             }
+
+		     List<String> friends = new ArrayList<String>();
+		     for (int i = 0;i<map.getFriends().size();i++){
+				 friends.add(map.getFriends().get(i).getPseudo());
+             }
+
 		     user.put("id",map.getUser().getId());
 		     user.put("pseudo",map.getUser().getPseudo());
-		 			builder
+
+		 					builder
 			        .field("name", map.getName())
 			        .field("description", map.getDescription())
-			        .field("isPrivate", map.isPrivate())
+			        .field("isPrivate", Boolean.valueOf(map.getIsPrivate()))
 			        .field("user",user)
-							.field("tags", map.getTags())
+					.field("tags",tags)
+					.field("friends",friends)
+
 			    .endObject();
 
 		return builder;	}
@@ -416,9 +437,21 @@ public final class DB {
 					eventMap.setName((String)map.get("name"));
 					eventMap.setDescription((String)map.get("description"));
 					eventMap.setPlaces(null);
+					eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
 					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
-
-					eventMap.setTags(tags);
+					ArrayList<String> friends =  (ArrayList<String>) map.get("friends");
+					ArrayList<Tag> tagsList = new ArrayList<Tag>();
+					ArrayList<Friend> friendList = new ArrayList<Friend>();
+					for (int t = 0; t<tags.size();t++){
+						Tag tag = new Tag(tags.get(t));
+						tagsList.add(tag);
+					}
+					for (int j = 0; j<friends.size();j++){
+						Friend friend = new Friend(friends.get(j));
+						friendList.add(friend);
+					}
+					eventMap.setTags(tagsList);
+					eventMap.setFriends(friendList);
 					eventMaps.add(eventMap);
 				}
 			}
@@ -440,17 +473,10 @@ public final class DB {
 	public static ArrayList<EventMap> getPublicMap() throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
-		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
-
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
 					.setQuery(QueryBuilders.matchQuery("isPrivate",false)).get();
-
-			/*SearchResponse res= cl.prepareSearch(mapIndex)
-					.setTypes(mapIndex)
-					.setQuery(qb)
-					.get();*/
 
 			SearchHit[] searchHit= res.getHits().getHits();
 
@@ -468,9 +494,11 @@ public final class DB {
 					eventMap.setPlaces(null);
 					eventMaps.add(eventMap);
 
-					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+					ArrayList<Tag> tags =  (ArrayList<Tag>) map.get("tags");
+					ArrayList<Friend> friends =  (ArrayList<Friend>) map.get("friends");
 
 					eventMap.setTags(tags);
+					eventMap.setFriends(friends);
 
 					User u = new User();
 					Map<String, String> mapuser = (Map<String, String> ) map.get("user");
@@ -520,6 +548,17 @@ public final class DB {
 		return BCrypt.hashpw(password, BCrypt.gensalt(15));
 	}
 	
+	//search a map using the query qb
+	public static SearchHit[] MapSearch(QueryBuilder qb) {
+		TransportClient cl = getClient();
+		SearchResponse res= cl.prepareSearch(mapIndex)
+				.setTypes(mapIndex)
+				.setQuery(qb)
+				.get();
+
+		return res.getHits().getHits();
+	}
+
 	//return map with places with tags search
 	public SearchHit[] searchPublicMapTags(String[] search) {
 		TransportClient cl= getClient();
@@ -532,34 +571,23 @@ public final class DB {
 				.get();
 		SearchHit[] tab = res.getHits().getHits();
 		String[] tabid= new String[tab.length];
-		
+
 		for(int i=0; i<tab.length; i++) {
 			tabid[i]= tab[i].getId();
 		}
-		
+
 		return MapSearch(queryMapID(tabid, false));
 	}
 
 	// return query for map with id id, if priv is true search private and public map else only public map
 	public QueryBuilder queryMapID(String[] id, boolean priv) {
 		BoolQueryBuilder qb= QueryBuilders.boolQuery();
-		
+
 		if(!priv)
 			qb.mustNot(QueryBuilders.termQuery("isPrivate", false));
 		qb.filter(QueryBuilders.idsQuery(mapIndex).addIds(id));
-		
+
 		return qb;
-	}
-
-	//search a map using the query qb
-	public static SearchHit[] MapSearch(QueryBuilder qb) {
-		TransportClient cl = getClient();
-		SearchResponse res= cl.prepareSearch(mapIndex)
-				.setTypes(mapIndex)
-				.setQuery(qb)
-				.get();
-
-		return res.getHits().getHits();
 	}
 
 

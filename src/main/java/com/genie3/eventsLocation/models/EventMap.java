@@ -1,17 +1,15 @@
 package com.genie3.eventsLocation.models;
 
-import java.util.ArrayList;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonCreator;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,9 +20,11 @@ public class EventMap
 
     @NotNull(message = "Name field is not provide")
     @NotBlank(message = "Name must not be blank")
+    @JsonProperty("name")
     private String  name;
 
     @NotNull(message = "Description field is not provide")
+    @JsonProperty("description")
     private String description;
 
 
@@ -33,84 +33,43 @@ public class EventMap
 
     private User user;
 
+    @NotNull (message = "tags field is not provide")
+    @Valid
+    @JsonProperty("tags")
+    private ArrayList<Tag> tags;
 
 
-    @NotNull
+    @NotNull (message = "friends field is not provide")
+    @Valid
+    @JsonProperty("friends")
+    private ArrayList<Friend> friends;
+
+
+   /* @NotNull
     @Pattern(regexp="\\[[_ A-Za-z0-9 ]*(,[_ A-Za-z0-9]+)*\\]")
     @JsonIgnore
-    private String taglist;
+    private String taglist;*/
 
 
-
-    private ArrayList<String> tags;
-
-
-
-    @NotNull (message = "visibility field is not provide")
+    @NotNull (message = "isPrivate field is not provide")
     @Pattern(regexp = "^true|false$+",message = "Private must be a boolean")
-    private String visibility;
+    @JsonProperty("isPrivate")
+    private String isPrivate;
 
 
-    @JsonCreator
-    public EventMap( @JsonProperty("name") String name,
-                     @JsonProperty("description") String description,
-                     @JsonProperty("visibility") String isPrivate,
-                     @JsonProperty("taglist") String tags
-                     ) {
-        this.name = name;
-        this.description = description;
-        this.places = new ArrayList<Place>();
-        this.setVisibility(isPrivate);
-        this.taglist = tags;
-        this.user = null;
-
-    }
-
-    public ArrayList<String> getTags() {
+    public ArrayList<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
+    public void setTags(ArrayList<Tag> tags) {
         this.tags = tags;
     }
 
-    public void toArray(String tags){
-        String s = tags.replaceAll("\\[","")
-                .replaceAll("\\]","");
-
-        if (s.isEmpty()){
-
-            this.setTags(new ArrayList<String>());
-        }else {
-            String tmp[] =s.split(",");
-
-            ArrayList<String> mapTag = new ArrayList<String>();
-
-            for (int i = 0 ;i <tmp.length ; i++){
-                mapTag.add(tmp[i]);
-            }
-
-          //  System.out.println("size" + mapTag.size());
-            this.setTags(mapTag);
-        }
-
-
-    }
-
-
+    @JsonCreator
     public EventMap() {
         this.places = new ArrayList<Place>();
         this.user = null;
-        this.tags = new ArrayList<String>();
-    }
-
-
-    public String getTaglist() {
-        return taglist;
-    }
-
-    public void setTaglist(String taglist) {
-        this.taglist = taglist;
+        this.tags = null;
     }
 
 
@@ -157,14 +116,23 @@ public class EventMap
         this.user = user;
     }
 
-    public Boolean  isPrivate() {
-        return Boolean.valueOf(visibility);
+    public void setVisibility(String aPrivate) {
+        isPrivate = aPrivate;
+    }
+    public String getIsPrivate() {
+        return isPrivate;
     }
 
-    public void setVisibility(String aPrivate) {
-        visibility = aPrivate;
+    public void setIsPrivate(String isprivate) {
+        this.isPrivate = isprivate;
     }
-    public String getVisibility() {
-        return visibility;
+    public ArrayList<Friend> getFriends() {
+        return friends;
     }
+
+    public void setFriends(ArrayList<Friend> friends) {
+        this.friends = friends;
+    }
+
+
 }

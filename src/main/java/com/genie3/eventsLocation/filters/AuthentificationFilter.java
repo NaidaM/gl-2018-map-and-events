@@ -10,16 +10,15 @@ import org.jose4j.jwt.consumer.ErrorCodeValidator;
 import org.jose4j.jwt.consumer.InvalidJwtException;
 
 import javax.annotation.security.DenyAll;
-import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.container.ResourceInfo;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
-import javax.ws.rs.container.ResourceInfo;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -28,17 +27,12 @@ public class AuthentificationFilter implements ContainerRequestFilter {
 
 
     @Context
-    private ResourceInfo resourceInfo;
+    private ResourceInfo resourceInfo =null;
 
 
     final static Logger logger = Logger.getLogger( AuthentificationFilter.class );
     public static String AUTHORIZATION_PROPERTY = "Authorization";
     public static String HEADER_PROPERTY_ID = "id";
-    public static final String ACCESS_REFRESH = "Token expired. Please authenticate again!";
-    public static final String ACCESS_INVALID_TOKEN = "Token invalid. Please authenticate again!";
-    public static final String ACCESS_DENIED = "Not allowed to access this resource!";
-    public static final String ACCESS_FORBIDDEN = "Access forbidden!";
-
 
 
     public void filter( ContainerRequestContext requestContext )

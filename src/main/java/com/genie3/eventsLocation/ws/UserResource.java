@@ -26,18 +26,14 @@ public class UserResource {
 
         try {
 
-             User u =  Dao.getUserDao().getWithPseudo(pseudo);
-             u.setMaps(null);
+            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            u.setMaps(null);
             return Response.status(Response.Status.OK).entity(u).build();
-        }catch (DaoException.NotFoundException ex){
+
+        } catch (DaoException.NotFoundException ex) {
+
             return Response.status(Response.Status.NOT_FOUND).entity(new Error(ex.getMessage())).build();
         }
-
-        /*
-        *   return Response.status(Response.Status.OK).entity(user).build();
-        *    use this to return result with specific Http status and the method return must be
-        *    javax.ws.rs.core.Res0ponse
-        */
     }
 
 
@@ -49,17 +45,17 @@ public class UserResource {
                            @NotNull(message = "Post body must not empty")
                            @Valid User user) {
 
-        try{
-            User u =  Dao.getUserDao().update(user,"user");
+        try {
+            User u = Dao.getUserDao().update(user, "user");
             return Response.status(Response.Status.OK).entity(u).build();
 
-        }catch (DaoException.DaoInternalError ex){
+        } catch (DaoException.DaoInternalError ex) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new Error(ex.getMessage()))
                     .build();
         }
 
-       // return Response.status(Response.Status.CREATED).entity(user).build();
+        // return Response.status(Response.Status.CREATED).entity(user).build();
     }
 
     @DELETE
@@ -70,11 +66,11 @@ public class UserResource {
     public Response delete(@PathParam("pseudo") String pseudo) {
 
         try {
-            User u =  Dao.getUserDao().getWithPseudo(pseudo);
-           Dao.getUserDao().delete(u.getId(),"user");
+            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            Dao.getUserDao().delete(u.getId(), "user");
             return Response.status(Response.Status.OK).build();
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new Error(ex.getMessage()))
@@ -90,24 +86,24 @@ public class UserResource {
     public Response getMaps(@PathParam("pseudo") String pseudo) {
 
 
-            List<EventMap> maps;
-			try {
-                User u =  Dao.getUserDao().getWithPseudo(pseudo);
-				maps = Dao.getMapDao().readUserMap(u.getId());
-				u.setMaps(maps);
-				return Response.status(Response.Status.OK).entity(u).build();
+        List<EventMap> maps;
+        try {
+            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            maps = Dao.getMapDao().readUserMap(u.getId());
+            u.setMaps(maps);
+            return Response.status(Response.Status.OK).entity(u).build();
 
-			}catch (DaoException.NotFoundException ex){
+        } catch (DaoException.NotFoundException ex) {
 
-                Error error= new Error(ex.getMessage());
+            Error error = new Error(ex.getMessage());
 
-                return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
 
-			}catch (DaoInternalError e) {
+        } catch (DaoInternalError e) {
 
-				Error error= new Error(e.getMessage());
-				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
-			}
+            Error error = new Error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+        }
 
 
     }
@@ -118,30 +114,27 @@ public class UserResource {
     @Path("/{pseudo}/maps")
     @RolesAllowed({"user"})
     public Response createMap(@NotNull(message = "Post body must not empty")
-                                  @Valid EventMap map,
+                              @Valid EventMap map,
                               @PathParam("pseudo") String pseudo) {
 
 
         try {
 
-            User u =  Dao.getUserDao().getWithPseudo(pseudo);
+            User u = Dao.getUserDao().getWithPseudo(pseudo);
             map.setUser(u);
-            map.toArray(map.getTaglist());
+            //map.toArray(map.getTaglist());
 
-            EventMap eventMap =  Dao.getMapDao().create(map,"map");
+            EventMap eventMap = Dao.getMapDao().create(map, "map");
 
             // Just for not display it
             eventMap.setUser(null);
             return Response.status(Response.Status.CREATED).entity(eventMap).build();
-        }catch (DaoException.NotFoundException ex){
+        } catch (DaoException.NotFoundException ex) {
             return Response.status(Response.Status.NOT_FOUND).entity(ex.getMessage()).build();
-        }catch (DaoException.DaoInternalError ex){
+        } catch (DaoException.DaoInternalError ex) {
+
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Error(ex.getMessage())).build();
         }
-
-
-
-
     }
 
 
@@ -158,11 +151,11 @@ public class UserResource {
         try {
 
             map.setId(mapIp);
-            map.toArray(map.getTaglist());
-            EventMap map1 = Dao.getMapDao().update(map,"map");
-
+            EventMap map1 = Dao.getMapDao().update(map, "map");
             return Response.status(Response.Status.OK).entity(map1).build();
-        }catch (DaoException.DaoInternalError ex){
+
+        } catch (DaoException.DaoInternalError ex) {
+
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(new Error(ex.getMessage())).build();
         }
 
@@ -178,20 +171,19 @@ public class UserResource {
                            @PathParam("map_id") String mapIp) {
 
         try {
-            if(Dao.getMapDao().delete(mapIp,"map")){
+
+            if (Dao.getMapDao().delete(mapIp, "map")) {
                 return Response.status(Response.Status.OK).build();
-            }else {
+            } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
-        }catch (DaoException.DaoInternalError ex){
+
+        } catch (DaoException.DaoInternalError ex) {
+
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new Error(ex.getMessage()))
                     .build();
         }
 
-
     }
-
-   
-
 }
