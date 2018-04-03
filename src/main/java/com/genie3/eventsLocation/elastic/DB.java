@@ -247,7 +247,7 @@ public final class DB {
 			        .field("description", map.getDescription())
 			        .field("isPrivate", map.isPrivate())
 			        .field("user",user)
-							.field("tags", map.getTags())
+			        .field("tags", map.getTags())
 			    .endObject();
 
 		return builder;	}
