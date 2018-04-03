@@ -11,11 +11,12 @@ public class Error {
 
     @JsonCreator
     public Error(@JsonProperty("message") ArrayList<String> message) {
+
         this.message = message;
     }
     public Error(@JsonProperty("message") String message) {
+
         this.message.add(message);
     }
-
 
 }

@@ -1,18 +1,5 @@
 package com.genie3.eventsLocation.ws;
 
-import java.util.HashMap;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
 import com.genie3.eventsLocation.dao.Dao;
@@ -21,6 +8,13 @@ import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.filters.TokenSecurity;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.User;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import java.util.HashMap;
 
 @Path("/auth")
 
@@ -49,11 +43,6 @@ public class AuthResource {
 
             HashMap<String,Object> map = new HashMap<String,Object>();
             map.put("access_token", token );
-
-
-          //  HashMap<String,String> token = Dao.getUserDao().getToken(user.getPseudo());
-
-
             return Response.status(Response.Status.OK).entity(map).build();
 
         }catch (DaoException.NotFoundException ex){
@@ -66,18 +55,14 @@ public class AuthResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
         }
 
-        /*
-        *   return Response.status(Response.Status.OK).entity(user).build();
-        *    use this to return result with specific Http status and the method return must be
-        *    javax.ws.rs.core.Response
-        */
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/register")
-    public Response create(@NotNull(message = "Post body must not empty") @Valid @ValidPassword User user)  {
+    public Response create(@NotNull(message = "Post body must not empty")
+                               @Valid @ValidPassword User user)  {
 
         try {
             user.setRole("user");
