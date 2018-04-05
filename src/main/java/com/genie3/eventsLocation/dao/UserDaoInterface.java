@@ -6,6 +6,7 @@ import com.genie3.eventsLocation.models.User;
 public interface UserDaoInterface extends CrudInterface<User>{
 
     User getWithPseudo(String pseudo) throws DaoException.NotFoundException;
+    void updatePassord(User user,String password);
     Boolean authenticate(String pseudo,String password) throws DaoException.NotFoundException;
 
 }

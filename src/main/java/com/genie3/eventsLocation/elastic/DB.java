@@ -206,6 +206,25 @@ public final class DB {
 		}
 	}
 
+	public static void updateUserPassword(User u,String password){
+		TransportClient client = getClient();
+		UpdateRequest updateRequest = new UpdateRequest();
+		updateRequest.index(userIndex);
+		updateRequest.type(userIndex);
+		try {
+			XContentBuilder builder = jsonBuilder()
+					.startObject();
+			updateRequest.id(u.getId());
+			builder.field("password", HashPwd(password));
+			builder.endObject();
+			updateRequest.doc(builder);
+			client.update(updateRequest).get();
+		}catch (Exception ex){
+			System.out.println(ex.getMessage());
+		}
+
+	}
+
 	public static XContentBuilder updatePlace(Place place,XContentBuilder builder)  throws IOException {
 
 		builder = jsonBuilder()
@@ -298,7 +317,8 @@ public final class DB {
 		.field("role", user.getRole())
 		.endObject();
 
-		return builder;	}
+		return builder;
+	}
 
 
 	public static User getUserWithPseudo(String name) throws DaoException.NotFoundException{

@@ -8,7 +8,9 @@ import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.filters.TokenSecurity;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.User;
+import com.genie3.eventsLocation.models.UserPasswordUpdate;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
@@ -91,6 +93,44 @@ public class AuthResource {
     public boolean ExistPseudo(@QueryParam("pseudo") String Pseudo) {
 
         return DB.ExistPseudo(Pseudo);
+    }
+
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"user"})
+    @Path("{pseudo}/password")
+    public Response updatePassword(
+            @PathParam("pseudo") String pseudo,
+            @NotNull(message = "Post body must not empty")
+            @Valid UserPasswordUpdate user) {
+
+        try {
+
+            if(!user.getNewPassword().equals(user.getNewPassword())){
+                return Response.status(Response.Status.OK).entity(
+                        new Error("New Password does not match")
+                ).build();
+            }
+
+            User user1 = Dao.getUserDao().getWithPseudo(pseudo);
+
+            Dao.getUserDao().authenticate(user.getActualPassword(), user1.getPassword());
+
+            Dao.getUserDao().updatePassord(user1,user.getNewPassword());
+            return Response.status(Response.Status.OK).build();
+
+        }catch (DaoException.NotFoundException ex){
+
+            Error error = new Error("actual password incorrect");
+            return Response.status(Response.Status.UNAUTHORIZED).entity(error).build();
+
+        }catch (Exception ex){
+            Error error = new Error(ex.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+        }
+
     }
 
 }

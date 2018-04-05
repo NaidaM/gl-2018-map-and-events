@@ -6,8 +6,6 @@ import com.genie3.eventsLocation.models.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.HashMap;
 
 
 public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
@@ -44,5 +42,8 @@ public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
         }
     }
 
-
+    @Override
+    public void updatePassord(User user, String password) {
+        DB.updateUserPassword(user,password);
+    }
 }
