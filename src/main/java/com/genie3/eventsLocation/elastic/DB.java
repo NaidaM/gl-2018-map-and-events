@@ -689,19 +689,16 @@ public final class DB {
 	public static ArrayList<EventMap> getFriendMap(String pseudo) throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
-		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
-
-
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
 					.setQuery(QueryBuilders.matchQuery("friends",pseudo))
 					.addSort("updated_at" , SortOrder.DESC).get();
 
-
 			SearchHit[] searchHit= res.getHits().getHits();
 
 			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
+
 			if(searchHit.length !=0 ) {
 
 				for(int i=0; i<searchHit.length; i++) {
@@ -713,6 +710,12 @@ public final class DB {
 					eventMap.setName((String)map.get("name"));
 					eventMap.setDescription((String)map.get("description"));
 					eventMap.setPlaces(null);
+					User u = new User();
+
+					Map<String, String> mapuser = (Map<String, String> ) map.get("user");
+					u.setId(mapuser.get("id"));
+					u.setPseudo((mapuser.get("pseudo")));
+					eventMap.setUser(u);
 					eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
 					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
 					ArrayList<String> friends =  (ArrayList<String>) map.get("friends");

@@ -117,10 +117,10 @@ public class UserResource {
 
         List<EventMap> maps;
         try {
-            User u = Dao.getUserDao().getWithPseudo(pseudo);
+
             maps = Dao.getMapDao().getFriendMap(pseudo);
-            u.setMaps(maps);
-            return Response.status(Response.Status.OK).entity(u).build();
+
+            return Response.status(Response.Status.OK).entity(maps).build();
 
         } catch (DaoException.NotFoundException ex) {
 
