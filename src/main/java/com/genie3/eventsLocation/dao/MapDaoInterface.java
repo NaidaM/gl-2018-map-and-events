@@ -10,6 +10,7 @@ import java.util.List;
 public interface MapDaoInterface extends CrudInterface<EventMap>{
     
     List<EventMap> readUserMap(String id) throws DaoInternalError,DaoException.NotFoundException;
+    List<EventMap> getFriendMap(String pseudo) throws DaoInternalError,DaoException.NotFoundException;
     List<EventMap> getPublicMap() throws DaoInternalError,DaoException.NotFoundException;
 
     

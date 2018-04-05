@@ -108,6 +108,35 @@ public class UserResource {
 
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{pseudo}/maps/friends")
+    @RolesAllowed({"user"})
+    public Response getFriendMaps(@PathParam("pseudo") String pseudo) {
+
+
+        List<EventMap> maps;
+        try {
+            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            maps = Dao.getMapDao().getFriendMap(pseudo);
+            u.setMaps(maps);
+            return Response.status(Response.Status.OK).entity(u).build();
+
+        } catch (DaoException.NotFoundException ex) {
+
+            Error error = new Error(ex.getMessage());
+
+            return Response.status(Response.Status.NOT_FOUND).entity(error).build();
+
+        } catch (DaoInternalError e) {
+
+            Error error = new Error(e.getMessage());
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(error).build();
+        }
+
+
+    }
+
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)

@@ -1,13 +1,13 @@
 package com.genie3.eventsLocation.dao;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.models.EventMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 
@@ -80,6 +80,15 @@ public class MapDaoFakeImpl extends Crud<EventMap> implements MapDaoInterface{
 		}
 		catch (Exception e) {
 
+			throw new DaoException.DaoInternalError(e.getMessage());
+		}
+	}
+
+
+	public List<EventMap>  getFriendMap(String pseudo)  throws DaoInternalError {
+		try{
+			return DB.getFriendMap(pseudo);
+		}catch (Exception e) {
 			throw new DaoException.DaoInternalError(e.getMessage());
 		}
 	}
