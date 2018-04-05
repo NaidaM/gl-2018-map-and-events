@@ -8,6 +8,7 @@ import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
@@ -21,12 +22,15 @@ import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +79,8 @@ public final class DB {
 		try {
 			XContentBuilder builder = jsonBuilder()
 					.startObject();
+				builder.field("created_at",projectDateTime())
+                    .field("updated_at",projectDateTime());
 
 			if (t instanceof User){
 				User user = (User) t;
@@ -161,6 +167,7 @@ public final class DB {
 
 			XContentBuilder builder = jsonBuilder()
 					.startObject();
+			builder.field("updated_at",projectDateTime());
 
 			if (t instanceof User){
 				User user = (User) t;
@@ -233,6 +240,8 @@ public final class DB {
 		.field("isPrivate", Boolean.valueOf(map.getIsPrivate()))
 		.field("tags", tags)
 		.field("friends", friends)
+		.field("updated_at", projectDateTime())
+
 		.endObject();
 
 		return builder;	}
@@ -420,7 +429,8 @@ public final class DB {
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
-					.setQuery(QueryBuilders.matchQuery("user.id",userId)).get();
+					.setQuery(QueryBuilders.matchQuery("user.id",userId))
+                    .addSort("updated_at" , SortOrder.DESC).get();
 
 
 			SearchHit[] searchHit= res.getHits().getHits();
@@ -621,5 +631,38 @@ public final class DB {
 				.get();
 		return res.getHits().getHits();
 	}
+
+
+	public static String projectDateTime(){
+        LocalDateTime date = LocalDateTime.now();
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+    }
+
+
+   public static void createAllIndex(){
+       IndicesAdminClient indicesAdminClient = getClient().admin().indices();
+       try {
+           indicesAdminClient.prepareCreate("user").get();
+           indicesAdminClient.prepareCreate("place").get();
+           indicesAdminClient.prepareCreate("map").get();
+       }catch (Exception e){
+           System.out.println("Error when creating index");
+       }
+
+   }
+
+   public static void delateAllIndex(){
+       IndicesAdminClient indicesAdminClient = getClient().admin().indices();
+       try {
+           indicesAdminClient.prepareDelete("user").get();
+           indicesAdminClient.prepareDelete("place").get();
+           indicesAdminClient.prepareDelete("map").get();
+       }catch (Exception e){
+           System.out.println("Error when creating index");
+       }
+
+   }
+
+
 
 }

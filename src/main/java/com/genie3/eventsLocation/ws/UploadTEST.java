@@ -8,6 +8,8 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Path("/upload")
@@ -42,6 +44,18 @@ public class UploadTEST {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadFilebyPath(@PathParam("filename") String fileName) {
         return Dao.getImageDAO().download(fileName);
+    }
+
+
+    @GET
+    @Path("/date")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response currentDate() {
+        LocalDateTime date = LocalDateTime.now();
+        String text = date.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        //LocalDate parsedDate = LocalDate.parse(text, formatter);
+        return Response.status(Response.Status.OK).entity(text).build();
+
     }
 
 }
