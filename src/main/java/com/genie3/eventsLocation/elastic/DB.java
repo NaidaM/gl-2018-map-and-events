@@ -6,6 +6,7 @@ import com.genie3.eventsLocation.models.*;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.search.SearchPhaseExecutionException;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
 import org.elasticsearch.client.IndicesAdminClient;
@@ -14,10 +15,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.IndexNotFoundException;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.rest.RestStatus;
@@ -441,10 +439,6 @@ public final class DB {
 
 	public static ArrayList<EventMap> getUserMap(String userId) throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
-
-		//TermQueryBuilder qb= new TermQueryBuilder("userId", userId);
-
-
 		try {
 			SearchResponse res = cl.prepareSearch(mapIndex)
 					.setTypes(mapIndex)
@@ -489,8 +483,11 @@ public final class DB {
 
 		}catch (IndexNotFoundException ex){
 			throw new  DaoException.NotFoundException("No map data found for user: "+ userId);
+		}catch (SearchPhaseExecutionException ex){
+			return new ArrayList<EventMap>();
 		}
-		catch (Exception ex){
+		catch (RuntimeException  ex){
+			System.out.println(ex.getClass().getName());
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
 
@@ -543,7 +540,11 @@ public final class DB {
 		}catch (IndexNotFoundException ex){
 
 			throw new  DaoException.NotFoundException("No data found");
+		}catch (SearchPhaseExecutionException ex){
+
+			throw new  DaoException.NotFoundException("No data found");
 		}
+
 		catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
@@ -553,24 +554,17 @@ public final class DB {
 
 	public static boolean ExistPseudo(String Pseudo)  {
 		TransportClient cl = getClient();
-		//TermQueryBuilder qb= new TermQueryBuilder("pseudo", Pseudo);
 		try {
 
 			SearchResponse res = cl.prepareSearch(userIndex)
 					.setTypes(userIndex)
 					.setQuery(QueryBuilders.matchQuery("pseudo",Pseudo)).get();
 
-			/*SearchResponse res= cl.prepareSearch(userIndex)
-					.setTypes(userIndex)
-					.setQuery(qb)
-					.get();*/
 			SearchHit[] searchHit= res.getHits().getHits();
 			return  (searchHit.length == 1);
 		}catch (Exception ex){
 			return false;
 		}
-
-
 	}
 
 	static String HashPwd(String password) {
@@ -613,7 +607,8 @@ public final class DB {
 		return MapSearch(queryMapID(tabid, false));
 	}
 
-	// return query for map with id id, if priv is true search private and public map else only public map
+	// return query for map with id,
+	// if priv is true search private and public map else only public map
 	public QueryBuilder queryMapID(String[] id, boolean priv) {
 		BoolQueryBuilder qb= QueryBuilders.boolQuery();
 
@@ -685,7 +680,6 @@ public final class DB {
 
 
 	@SuppressWarnings({"unchecked"})
-
 	public static ArrayList<EventMap> getFriendMap(String pseudo) throws DaoInternalError,DaoException.NotFoundException {
 		TransportClient cl = getClient();
 
@@ -739,6 +733,75 @@ public final class DB {
 
 		}catch (IndexNotFoundException ex){
 			throw new  DaoException.NotFoundException("No map data found for user: "+ pseudo);
+		}
+		catch (SearchPhaseExecutionException ex){
+			return new ArrayList<EventMap>();
+		}
+		catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
+
+
+	}
+
+	@SuppressWarnings({"unchecked"})
+	public static ArrayList<EventMap> getMapWithTag(String[] tagList) throws DaoInternalError,DaoException.NotFoundException {
+		TransportClient cl = getClient();
+
+
+		try {
+			SearchResponse res = cl.prepareSearch(mapIndex)
+					.setTypes(mapIndex)
+					.setQuery(QueryBuilders.matchQuery("tags",String.join(",",tagList)))
+					.addSort("updated_at" , SortOrder.DESC).get();
+
+			SearchHit[] searchHit= res.getHits().getHits();
+
+			ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
+
+			if(searchHit.length !=0 ) {
+
+				for(int i=0; i<searchHit.length; i++) {
+
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					EventMap eventMap= new EventMap();
+
+					eventMap.setId(searchHit[i].getId());
+					eventMap.setName((String)map.get("name"));
+					eventMap.setDescription((String)map.get("description"));
+					eventMap.setPlaces(null);
+					User u = new User();
+
+					Map<String, String> mapuser = (Map<String, String> ) map.get("user");
+					u.setId(mapuser.get("id"));
+					u.setPseudo((mapuser.get("pseudo")));
+					eventMap.setUser(u);
+					eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
+					ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+					ArrayList<String> friends =  (ArrayList<String>) map.get("friends");
+					ArrayList<Tag> tagsList = new ArrayList<Tag>();
+					ArrayList<Friend> friendList = new ArrayList<Friend>();
+					for (int t = 0; t<tags.size();t++){
+						Tag tag = new Tag(tags.get(t));
+						tagsList.add(tag);
+					}
+					for (int j = 0; j<friends.size();j++){
+						Friend friend = new Friend(friends.get(j));
+						friendList.add(friend);
+					}
+					eventMap.setTags(tagsList);
+					eventMap.setFriends(friendList);
+					eventMaps.add(eventMap);
+				}
+			}
+			return eventMaps;
+
+
+		}catch (IndexNotFoundException ex){
+			throw new  DaoException.NotFoundException("No map data found");
+		}
+		catch (SearchPhaseExecutionException ex){
+			return new ArrayList<EventMap>();
 		}
 		catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());

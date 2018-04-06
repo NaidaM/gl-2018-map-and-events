@@ -1,12 +1,12 @@
 package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
-import com.genie3.eventsLocation.models.User;
 
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
@@ -84,6 +84,25 @@ public class MapResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(new Error(e.getMessage()))
                     .build();
+		}
+
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/search")
+	public Response getMaps(@QueryParam("tag") final List<String> tags) {
+		String [] taglist = new String[tags.size()];
+		tags.toArray(taglist);
+		try {
+			List< EventMap> maps = DB.getMapWithTag(taglist);
+			return Response.status(Response.Status.OK).entity(maps).build();
+		}catch (DaoException.NotFoundException ex){
+			return Response.status(Response.Status.NOT_FOUND).entity(new Error(ex.getMessage())).build();
+		}catch (DaoException.DaoInternalError ex){
+
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity(new Error(ex.getMessage())).build();
 		}
 
 	}
