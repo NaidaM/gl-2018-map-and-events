@@ -1,5 +1,8 @@
 package com.genie3.eventsLocation.dao;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -7,31 +10,49 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Random;
+
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
 
 public class ImageImpl implements ImageInterface {
     
 
-	 private static String UPLOAD_PATH = "/home/yannis/EventLoc/";
+	 private static String UPLOAD_PATH = "/home/pk/EventLoc/";
+	 public static final int nombre = 1000000;
 	
 	public Response  upload(InputStream fileInputStream,String filename) {
-		try
-        {
-
+		try{
             int read = 0;
             byte[] bytes = new byte[1024];
- 
-            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH + filename));
-            while ((read = fileInputStream.read(bytes)) != -1)
-            {
-                out.write(bytes, 0, read);
+            Random rd = new Random();
+            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +rd.nextInt(nombre)+".jpg"));   
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();           
+            while ((read = fileInputStream.read(bytes)) != -1) {
+                bao.write(bytes, 0, read);
             }
+            byte[] data = bao.toByteArray();
+            InputStream in  = new ByteArrayInputStream(data);
+			BufferedImage image = ImageIO.read(in);
+			Iterator<ImageWriter> writers=  ImageIO.getImageWritersByFormatName("jpg");
+            ImageWriter writer = (ImageWriter) writers.next();            
+            ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+            writer.setOutput(ios);
+            ImageWriteParam param = writer.getDefaultWriteParam();
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            param.setCompressionQuality(0.5f);
+            writer.write(null, new IIOImage(image, null, null), param);            
             System.out.println("--- name: " + filename);
+
             out.flush();
             out.close();
         } catch (IOException e)
@@ -39,7 +60,7 @@ public class ImageImpl implements ImageInterface {
             throw new WebApplicationException("Error while uploading file. Please try again !!");
         }
         return Response.ok(filename + " uploaded successfully !!").build();
-    
+           
 	}
 
 	public Response download(String fileName) {     
@@ -60,6 +81,7 @@ public class ImageImpl implements ImageInterface {
 			    
         return response;
 }
+	
     public ArrayList<String> Images() {
     	// TODO Auto-generated method stub
 		return null;

@@ -38,4 +38,9 @@ public class Crud <T> implements CrudInterface<T> {
             throw new DaoException.DaoInternalError(ex.getMessage());
         }
     }
+
+	public void updatePassord(User user, String password) {
+		// TODO Auto-generated method stub
+		
+	}
 }

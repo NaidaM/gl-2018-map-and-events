@@ -12,19 +12,20 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+
 @Path("/upload")
 public class UploadTEST {
-    @POST
+    
+	@POST
     @Path("/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
+	//@Consumes({ "image/jpg", "image/png" })
     public Response uploadImage(@FormDataParam("file") List<FormDataBodyPart> bodyParts
     ) throws Exception {
 
         for (int i = 0; i < bodyParts.size(); i++) {
             BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
             String fileName = bodyParts.get(i).getContentDisposition().getFileName();
-
-
             Dao.getImageDAO().upload(bodyPartEntity.getInputStream(), fileName);
         }
 
@@ -44,8 +45,9 @@ public class UploadTEST {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response downloadFilebyPath(@PathParam("filename") String fileName) {
         return Dao.getImageDAO().download(fileName);
-    }
-
+        
+        }
+        
 
     @GET
     @Path("/date")
