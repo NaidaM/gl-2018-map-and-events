@@ -58,6 +58,9 @@ public class ImageImpl implements ImageInterface {
         } catch (IOException e)
         {
             throw new WebApplicationException("Error while uploading file. Please try again !!");
+        }catch (Exception e)
+        {
+            throw new WebApplicationException("file is not image. Please try again !!");
         }
         return Response.ok(filename + " uploaded successfully !!").build();
            
