@@ -693,6 +693,7 @@ public final class DB {
            indicesAdminClient.prepareCreate("user").get();
            indicesAdminClient.prepareCreate("place").get();
            indicesAdminClient.prepareCreate("map").get();
+           indicesAdminClient.prepareCreate("photo").get();
        }catch (Exception e){
            System.out.println("Error when creating index");
        }
@@ -705,6 +706,7 @@ public final class DB {
            indicesAdminClient.prepareDelete("user").get();
            indicesAdminClient.prepareDelete("place").get();
            indicesAdminClient.prepareDelete("map").get();
+           indicesAdminClient.prepareDelete("photo").get();
        }catch (Exception e){
            System.out.println("Error when creating index");
        }

@@ -17,8 +17,9 @@ import java.util.List;
 public class UploadTEST {
     
 	@POST
-    @Path("/image")
+    @Path("/image/{id}")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
+	
 	//@Consumes({ "image/jpg", "image/png" })
     public Response uploadImage(@FormDataParam("file") List<FormDataBodyPart> bodyParts,@PathParam("id") String placeId
     ) throws Exception {
