@@ -2,6 +2,7 @@ package com.genie3.eventsLocation.elastic;
 
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
 import com.genie3.eventsLocation.models.*;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
@@ -631,19 +632,63 @@ public final class DB {
 		return res.getHits().getHits();
 	}
 
-	// search map by using it tags
-	public static SearchHit[] searchMapTags(String[] tags) {
+	// search public map by using it tags if there is no tags return all public map
+	@SuppressWarnings({"unchecked"})
+	public static ArrayList<EventMap> searchMapTags(String[] tagsSearch) throws NotFoundException {
 		TransportClient cl= getClient();
 		BoolQueryBuilder qb= QueryBuilders.boolQuery()
-				.minimumShouldMatch(1);
-		for(String s : tags) {
-			qb.should(QueryBuilders.termQuery("tags", s));
+				.must(QueryBuilders.termQuery("isPrivate", false));
+		if(tagsSearch.length !=0) {
+			qb.minimumShouldMatch(1);
+			for(String s : tagsSearch) {
+				qb.should(QueryBuilders.termQuery("tags", s));
+			}
 		}
 		SearchResponse res = cl.prepareSearch(mapIndex)
 				.setTypes(mapIndex)
 				.setQuery(qb)
 				.get();
-		return res.getHits().getHits();
+		
+		SearchHit[] searchHit= res.getHits().getHits();
+		
+		ArrayList<EventMap> eventMaps= new ArrayList<EventMap>();
+		if(searchHit.length == 0) {
+			throw new DaoException.NotFoundException("No map data found");
+		}
+		for(int i=0; i<searchHit.length; i++) {
+
+			Map<String, Object> map = searchHit[i].getSourceAsMap();
+			EventMap eventMap= new EventMap();
+
+			eventMap.setId(searchHit[i].getId());
+			eventMap.setName((String)map.get("name"));
+			eventMap.setDescription((String)map.get("description"));
+			eventMap.setPlaces(null);
+			User u = new User();
+
+			Map<String, String> mapuser = (Map<String, String> ) map.get("user");
+			u.setId(mapuser.get("id"));
+			u.setPseudo((mapuser.get("pseudo")));
+			eventMap.setUser(u);
+			eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
+			ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+			ArrayList<String> friends =  (ArrayList<String>) map.get("friends");
+			ArrayList<Tag> tagsList = new ArrayList<Tag>();
+			ArrayList<Friend> friendList = new ArrayList<Friend>();
+			for (int t = 0; t<tags.size();t++){
+				Tag tag = new Tag(tags.get(t));
+				tagsList.add(tag);
+			}
+			for (int j = 0; j<friends.size();j++){
+				Friend friend = new Friend(friends.get(j));
+				friendList.add(friend);
+			}
+			eventMap.setTags(tagsList);
+			eventMap.setFriends(friendList);
+			eventMaps.add(eventMap);
+		}
+		return eventMaps;
+		//return res.getHits().getHits();
 	}
 
 

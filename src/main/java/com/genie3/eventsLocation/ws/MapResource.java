@@ -4,6 +4,7 @@ import com.genie3.eventsLocation.dao.Dao;
 import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
 import com.genie3.eventsLocation.models.Error;
 import com.genie3.eventsLocation.models.EventMap;
 import com.genie3.eventsLocation.models.Place;
@@ -105,6 +106,23 @@ public class MapResource {
 					.entity(new Error(ex.getMessage())).build();
 		}
 
+	}
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/searchmap")
+	public Response getSearchMaps(@QueryParam("tag") List<String> tags) {
+		String [] taglist = new String[tags.size()];
+		tags.toArray(taglist);
+		
+		List<EventMap> maps;
+		try {
+			maps = DB.searchMapTags(taglist);
+			return Response.status(Response.Status.OK).entity(maps).build();
+		} catch (NotFoundException e) {
+			return Response.status(Response.Status.NOT_FOUND).entity(new Error(e.getMessage())).build();
+		}
+		
 	}
 
 	@POST
