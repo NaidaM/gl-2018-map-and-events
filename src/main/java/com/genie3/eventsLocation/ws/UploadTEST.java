@@ -20,13 +20,13 @@ public class UploadTEST {
     @Path("/image")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
 	//@Consumes({ "image/jpg", "image/png" })
-    public Response uploadImage(@FormDataParam("file") List<FormDataBodyPart> bodyParts
+    public Response uploadImage(@FormDataParam("file") List<FormDataBodyPart> bodyParts,@PathParam("id") String placeId
     ) throws Exception {
 
         for (int i = 0; i < bodyParts.size(); i++) {
             BodyPartEntity bodyPartEntity = (BodyPartEntity) bodyParts.get(i).getEntity();
             String fileName = bodyParts.get(i).getContentDisposition().getFileName();
-            Dao.getImageDAO().upload(bodyPartEntity.getInputStream(), fileName);
+            Dao.getImageDAO().upload(bodyPartEntity.getInputStream(), fileName,placeId);
         }
 
         return Response.status(Response.Status.OK).entity("Ok").build();
