@@ -22,20 +22,25 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.mindrot.jbcrypt.BCrypt;
+
+import com.genie3.eventsLocation.elastic.DB;
+
 
 
 public class ImageImpl implements ImageInterface {
     
 
-	 private static String UPLOAD_PATH = "/home/pk/EventLoc/";
+	 private static String UPLOAD_PATH = "Upload/";
 	 public static final int nombre = 1000000;
 	
-	public Response  upload(InputStream fileInputStream,String filename) {
+	public Response  upload(InputStream fileInputStream,String filename,String Idplace) {
 		try{
             int read = 0;
             byte[] bytes = new byte[1024];
             Random rd = new Random();
-            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +rd.nextInt(nombre)+".jpg"));   
+            String path = UPLOAD_PATH +HashPhoto(""+rd.nextInt(nombre))+".jpg";
+            OutputStream out = new FileOutputStream(new File(path));   
             ByteArrayOutputStream bao = new ByteArrayOutputStream();           
             while ((read = fileInputStream.read(bytes)) != -1) {
                 bao.write(bytes, 0, read);
@@ -52,9 +57,10 @@ public class ImageImpl implements ImageInterface {
             param.setCompressionQuality(0.5f);
             writer.write(null, new IIOImage(image, null, null), param);            
             System.out.println("--- name: " + filename);
-
+            
             out.flush();
             out.close();
+            DB.addPhoto(path, Idplace);
         } catch (IOException e)
         {
             throw new WebApplicationException("Error while uploading file. Please try again !!");
@@ -66,6 +72,9 @@ public class ImageImpl implements ImageInterface {
            
 	}
 
+	static String HashPhoto(String photo) {
+		return BCrypt.hashpw(photo, BCrypt.gensalt(15));
+	}
 	public Response download(String fileName) {     
 			    String fileLocation = UPLOAD_PATH+ fileName;		
 			    Response response = null;

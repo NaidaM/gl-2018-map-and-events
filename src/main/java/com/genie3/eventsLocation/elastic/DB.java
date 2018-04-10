@@ -48,7 +48,8 @@ public final class DB {
 	static String userIndex = "user";
 	static String mapIndex = "map";
 	static String placeIndex = "place";
-
+	static String photoIndex = "photo";
+	
 	private static TransportClient client;
 
 	private static TransportClient getClient() {
@@ -119,15 +120,27 @@ public final class DB {
 		}
 	}
 
-
+	public static String addPhoto(String photo,String Idplace) throws DaoInternalError {
+		try {
+			XContentBuilder builder = jsonBuilder()
+					.startObject();
+			builder.field("idPlace", Idplace)
+			.field("photo", photo)
+			.endObject();
+			IndexResponse resp = client.prepareIndex(photoIndex, "photo")
+					.setSource(builder)
+					.get();
+			return resp.getId();
+		}catch (Exception ex){
+			throw new  DaoException.DaoInternalError(ex.getMessage());
+		}
+	}
 	public static boolean delete(String id,String table) throws DaoException.DaoInternalError{
 
 		TransportClient cl = getClient();
 		try {
 
-
 			DeleteResponse del = cl.prepareDelete(table,table,id).get();
-
 			BulkByScrollResponse response =
 					DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
 					.source("_all")
@@ -265,8 +278,6 @@ public final class DB {
 
 
 	public static XContentBuilder createPlace(Place place,XContentBuilder builder)  throws IOException {
-
-		
 					builder
 			        .field("name", place.getName())
 			        .field("latitude", place.getLatitude())
@@ -346,7 +357,6 @@ public final class DB {
 
 	}
 
-
 	@SuppressWarnings({"unchecked"})
 	public static <T> T get(String id,String table) throws  DaoException.NotFoundException {
 		TransportClient cl = getClient();
@@ -394,6 +404,30 @@ public final class DB {
 		}
 	}
 
+	public static ArrayList<String> getPhoto(String placeId) throws DaoInternalError{
+		TransportClient cl = getClient();
+		ArrayList<String> photos= new ArrayList<String>();
+		
+		try {
+			SearchResponse res = cl.prepareSearch(photoIndex)
+					.setTypes("photo")
+					.setQuery(QueryBuilders.matchQuery("idPlace",placeId)).get();
+			SearchHit[] searchHit= res.getHits().getHits();
+			if(searchHit.length !=0 ) {
+				for(int i=0; i<searchHit.length; i++) {
+
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					String Photo ="";
+					Photo =((String)map.get("photo"));
+					photos.add(Photo);
+				}
+			}
+			return photos;
+		}catch (Exception ex){
+			throw new DaoException.DaoInternalError(ex.getMessage());
+		}
+		
+	}
 	public static ArrayList<Place> getPlaces(String mapId) throws DaoInternalError  {
 		TransportClient cl = getClient();
 		ArrayList<Place> places= new ArrayList<Place>();
@@ -704,6 +738,7 @@ public final class DB {
            indicesAdminClient.prepareCreate("user").get();
            indicesAdminClient.prepareCreate("place").get();
            indicesAdminClient.prepareCreate("map").get();
+           indicesAdminClient.prepareCreate("photo").get();
        }catch (Exception e){
            System.out.println("Error when creating index");
        }
@@ -716,6 +751,7 @@ public final class DB {
            indicesAdminClient.prepareDelete("user").get();
            indicesAdminClient.prepareDelete("place").get();
            indicesAdminClient.prepareDelete("map").get();
+           indicesAdminClient.prepareDelete("photo").get();
        }catch (Exception e){
            System.out.println("Error when creating index");
        }
