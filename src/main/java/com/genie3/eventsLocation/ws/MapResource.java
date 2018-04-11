@@ -87,7 +87,20 @@ public class MapResource {
 
 	}
 	
-	
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("{id}/photo/")
+	public Response getPhoto(@PathParam("id") String placeId) {
+		try {
+			List<String> p = DaoFactory.getPlaceDao().getPhoto(placeId);
+            return Response.status(Response.Status.OK).entity(p).build();
+		} catch (DaoInternalError e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Error(e.getMessage()))
+                    .build();
+		}
+
+	}
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
