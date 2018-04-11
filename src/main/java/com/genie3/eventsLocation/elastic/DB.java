@@ -3,7 +3,8 @@ package com.genie3.eventsLocation.elastic;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
-import com.genie3.eventsLocation.models.*;
+
+import com.genie3.eventsLocation.entities.*;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -127,11 +128,12 @@ public final class DB {
 			builder.field("idPlace", Idplace)
 			.field("photo", photo)
 			.endObject();
-			IndexResponse resp = client.prepareIndex(photoIndex, "photo")
+			IndexResponse resp = getClient().prepareIndex(photoIndex, "photo")
 					.setSource(builder)
 					.get();
 			return resp.getId();
 		}catch (Exception ex){
+			ex.printStackTrace();
 			throw new  DaoException.DaoInternalError(ex.getMessage());
 		}
 	}
@@ -426,8 +428,8 @@ public final class DB {
 		}catch (Exception ex){
 			throw new DaoException.DaoInternalError(ex.getMessage());
 		}
-		
 	}
+
 	public static ArrayList<Place> getPlaces(String mapId) throws DaoInternalError  {
 		TransportClient cl = getClient();
 		ArrayList<Place> places= new ArrayList<Place>();

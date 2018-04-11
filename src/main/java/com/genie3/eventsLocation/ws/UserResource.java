@@ -1,11 +1,11 @@
 package com.genie3.eventsLocation.ws;
 
-import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.dao.DaoFactory;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
-import com.genie3.eventsLocation.models.Error;
-import com.genie3.eventsLocation.models.EventMap;
-import com.genie3.eventsLocation.models.User;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.entities.EventMap;
+import com.genie3.eventsLocation.entities.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -26,7 +26,7 @@ public class UserResource {
 
         try {
 
-            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            User u = DaoFactory.getUserDao().getWithPseudo(pseudo);
             u.setMaps(null);
             return Response.status(Response.Status.OK).entity(u).build();
 
@@ -46,7 +46,7 @@ public class UserResource {
                            @Valid User user) {
 
         try {
-            User u = Dao.getUserDao().update(user, "user");
+            User u = DaoFactory.getUserDao().update(user, "user");
             return Response.status(Response.Status.OK).entity(u).build();
 
         } catch (DaoException.DaoInternalError ex) {
@@ -66,8 +66,8 @@ public class UserResource {
     public Response delete(@PathParam("pseudo") String pseudo) {
 
         try {
-            User u = Dao.getUserDao().getWithPseudo(pseudo);
-            Dao.getUserDao().delete(u.getId(), "user");
+            User u = DaoFactory.getUserDao().getWithPseudo(pseudo);
+            DaoFactory.getUserDao().delete(u.getId(), "user");
             return Response.status(Response.Status.OK).build();
 
         } catch (Exception ex) {
@@ -88,8 +88,8 @@ public class UserResource {
 
         List<EventMap> maps;
         try {
-            User u = Dao.getUserDao().getWithPseudo(pseudo);
-            maps = Dao.getMapDao().readUserMap(u.getId());
+            User u = DaoFactory.getUserDao().getWithPseudo(pseudo);
+            maps = DaoFactory.getMapDao().readUserMap(u.getId());
             u.setMaps(maps);
             return Response.status(Response.Status.OK).entity(u).build();
 
@@ -118,7 +118,7 @@ public class UserResource {
         List<EventMap> maps;
         try {
 
-            maps = Dao.getMapDao().getFriendMap(pseudo);
+            maps = DaoFactory.getMapDao().getFriendMap(pseudo);
 
             return Response.status(Response.Status.OK).entity(maps).build();
 
@@ -149,11 +149,11 @@ public class UserResource {
 
         try {
 
-            User u = Dao.getUserDao().getWithPseudo(pseudo);
+            User u = DaoFactory.getUserDao().getWithPseudo(pseudo);
             map.setUser(u);
             //map.toArray(map.getTaglist());
 
-            EventMap eventMap = Dao.getMapDao().create(map, "map");
+            EventMap eventMap = DaoFactory.getMapDao().create(map, "map");
 
             // Just for not display it
             eventMap.setUser(null);
@@ -180,7 +180,7 @@ public class UserResource {
         try {
 
             map.setId(mapIp);
-            EventMap map1 = Dao.getMapDao().update(map, "map");
+            EventMap map1 = DaoFactory.getMapDao().update(map, "map");
             return Response.status(Response.Status.OK).entity(map1).build();
 
         } catch (DaoException.DaoInternalError ex) {
@@ -201,7 +201,7 @@ public class UserResource {
 
         try {
 
-            if (Dao.getMapDao().delete(mapIp, "map")) {
+            if (DaoFactory.getMapDao().delete(mapIp, "map")) {
                 return Response.status(Response.Status.OK).build();
             } else {
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();

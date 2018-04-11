@@ -1,4 +1,4 @@
-package com.genie3.eventsLocation.models;
+package com.genie3.eventsLocation.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -28,7 +29,7 @@ public class EventMap
     private String description;
 
 
-    private ArrayList<Place> places ;
+    private List<Place> places ;
 
 
     private User user;
@@ -36,19 +37,13 @@ public class EventMap
     @NotNull (message = "tags field is not provide")
     @Valid
     @JsonProperty("tags")
-    private ArrayList<Tag> tags;
+    private List<Tag> tags;
 
 
     @NotNull (message = "friends field is not provide")
     @Valid
     @JsonProperty("friends")
-    private ArrayList<Friend> friends;
-
-
-   /* @NotNull
-    @Pattern(regexp="\\[[_ A-Za-z0-9 ]*(,[_ A-Za-z0-9]+)*\\]")
-    @JsonIgnore
-    private String taglist;*/
+    private List<Friend> friends;
 
 
     @NotNull (message = "isPrivate field is not provide")
@@ -57,11 +52,11 @@ public class EventMap
     private String isPrivate;
 
 
-    public ArrayList<Tag> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<Tag> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 
@@ -98,11 +93,11 @@ public class EventMap
         this.description = description;
     }
 
-    public ArrayList<Place> getPlaces() {
+    public List<Place> getPlaces() {
         return places;
     }
 
-    public void setPlaces(ArrayList<Place> places) {
+    public void setPlaces(List<Place> places) {
         this.places = places;
     }
 
@@ -126,11 +121,11 @@ public class EventMap
     public void setIsPrivate(String isprivate) {
         this.isPrivate = isprivate;
     }
-    public ArrayList<Friend> getFriends() {
+    public List<Friend> getFriends() {
         return friends;
     }
 
-    public void setFriends(ArrayList<Friend> friends) {
+    public void setFriends(List<Friend> friends) {
         this.friends = friends;
     }
 

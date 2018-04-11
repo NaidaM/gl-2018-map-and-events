@@ -1,4 +1,4 @@
-package com.genie3.eventsLocation.models;
+package com.genie3.eventsLocation.entities;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 

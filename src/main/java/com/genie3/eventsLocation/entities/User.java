@@ -1,4 +1,4 @@
-package com.genie3.eventsLocation.models;
+package com.genie3.eventsLocation.entities;
 
 import com.fasterxml.jackson.annotation.*;
 import org.hibernate.validator.constraints.Email;

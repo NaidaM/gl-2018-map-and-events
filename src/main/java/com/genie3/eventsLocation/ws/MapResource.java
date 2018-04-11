@@ -1,21 +1,19 @@
 package com.genie3.eventsLocation.ws;
 
-import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.dao.DaoFactory;
 import com.genie3.eventsLocation.elastic.DB;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.entities.EventMap;
+import com.genie3.eventsLocation.entities.Place;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
-import com.genie3.eventsLocation.models.Error;
-import com.genie3.eventsLocation.models.EventMap;
-import com.genie3.eventsLocation.models.Place;
-
 import javax.annotation.security.PermitAll;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("/maps")
@@ -27,8 +25,8 @@ public class MapResource {
 	public Response get(@PathParam("id") String  mapId) {
 
 		try {
-			EventMap map =  Dao.getMapDao().get(mapId,"map");
-			ArrayList<Place> places = Dao.getPlaceDao().getPlaceForMap(mapId);
+			EventMap map =  DaoFactory.getMapDao().get(mapId,"map");
+			List<Place> places = DaoFactory.getPlaceDao().getPlaceForMap(mapId);
 			map.setPlaces(places);
 			return Response.status(Response.Status.OK).entity(map).build();
 		}
@@ -55,7 +53,7 @@ public class MapResource {
 	public Response getAll() {
 
 		try {
-			List<EventMap> events = Dao.getMapDao().getPublicMap();
+			List<EventMap> events = DaoFactory.getMapDao().getPublicMap();
 
 			return Response.status(Response.Status.OK).entity(events).build();
 
@@ -79,7 +77,7 @@ public class MapResource {
 	public Response getPlaces(@PathParam("id") String mapId) {
 
 		try {
-			List<Place> p = Dao.getPlaceDao().getPlaceForMap(mapId);
+			List<Place> p = DaoFactory.getPlaceDao().getPlaceForMap(mapId);
             return Response.status(Response.Status.OK).entity(p).build();
 		} catch (DaoInternalError e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
@@ -135,9 +133,9 @@ public class MapResource {
 								@Valid Place place) {
 
 		try {
-			 EventMap map = Dao.getMapDao().get(mapId,"map");
+			 EventMap map = DaoFactory.getMapDao().get(mapId,"map");
 			 place.setMap(map);
-			Place p = Dao.getPlaceDao().create(place,"place");
+			Place p = DaoFactory.getPlaceDao().create(place,"place");
 			p.setMap(null);
 			return Response.status(Response.Status.CREATED).entity(p).build();
 		}catch (DaoException.NotFoundException ex){
@@ -167,7 +165,7 @@ public class MapResource {
 
 
 		try {
-			Place p =  Dao.getPlaceDao().update(place,"place");
+			Place p =  DaoFactory.getPlaceDao().update(place,"place");
 			return Response.status(Response.Status.OK).entity(p).build();
 		}catch (DaoException.DaoInternalError ex){
 
@@ -188,7 +186,7 @@ public class MapResource {
 
 
 		try {
-			if(Dao.getPlaceDao().delete(placeId,"place")){
+			if(DaoFactory.getPlaceDao().delete(placeId,"place")){
 
 				return Response.status(Response.Status.OK).build();
 			}else {

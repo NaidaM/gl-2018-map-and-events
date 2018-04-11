@@ -2,15 +2,15 @@ package com.genie3.eventsLocation.dao;
 
 import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.models.User;
+import com.genie3.eventsLocation.entities.User;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.validation.Valid;
 
 
-public class UserDaoFakeImpl extends Crud<User> implements UserDaoInterface {
+public class UserDaoImpl extends CrudImpl<User> implements UserDao {
 
-    public UserDaoFakeImpl() {
+    public UserDaoImpl() {
 
     }
 

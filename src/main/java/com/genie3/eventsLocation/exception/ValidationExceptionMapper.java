@@ -1,6 +1,6 @@
 package com.genie3.eventsLocation.exception;
 
-import com.genie3.eventsLocation.models.Error;
+import com.genie3.eventsLocation.entities.Error;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;

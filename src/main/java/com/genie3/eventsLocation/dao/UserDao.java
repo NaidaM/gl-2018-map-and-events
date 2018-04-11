@@ -1,11 +1,12 @@
 package com.genie3.eventsLocation.dao;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.entities.User;
 
-import com.genie3.eventsLocation.elastic.DB;
-import com.genie3.eventsLocation.models.User;
+public interface UserDao extends Crud<User> {
 
-public class UserDao  {
+    User getWithPseudo(String pseudo) throws DaoException.NotFoundException;
+    void updatePassord(User user,String password);
+    Boolean authenticate(String pseudo,String password) throws DaoException.NotFoundException;
 
 }

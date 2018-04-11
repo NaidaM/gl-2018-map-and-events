@@ -1,10 +1,10 @@
 package com.genie3.eventsLocation.filters;
 
-import com.genie3.eventsLocation.dao.Dao;
-import com.genie3.eventsLocation.dao.UserDaoInterface;
+import com.genie3.eventsLocation.dao.DaoFactory;
+import com.genie3.eventsLocation.dao.UserDao;
 import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.models.Error;
-import com.genie3.eventsLocation.models.User;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.entities.User;
 import org.apache.log4j.Logger;
 import org.jose4j.jwt.consumer.ErrorCodeValidator;
 import org.jose4j.jwt.consumer.InvalidJwtException;
@@ -99,7 +99,7 @@ public class AuthentificationFilter implements ContainerRequestFilter {
             }
 
             // check if token matches an user token (set in user/authenticate)
-            UserDaoInterface userDao = Dao.getUserDao();
+            UserDao userDao = DaoFactory.getUserDao();
             User user = null;
             try {
                 user = userDao.get(id,"user");

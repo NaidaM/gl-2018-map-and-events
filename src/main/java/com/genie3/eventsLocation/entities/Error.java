@@ -1,4 +1,4 @@
-package com.genie3.eventsLocation.models;
+package com.genie3.eventsLocation.entities;
 
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonProperty;

@@ -2,13 +2,13 @@ package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
 import com.genie3.eventsLocation.constraints.ValidPassword;
-import com.genie3.eventsLocation.dao.Dao;
+import com.genie3.eventsLocation.dao.DaoFactory;
 import com.genie3.eventsLocation.elastic.DB;
 import com.genie3.eventsLocation.exception.DaoException;
 import com.genie3.eventsLocation.filters.TokenSecurity;
-import com.genie3.eventsLocation.models.Error;
-import com.genie3.eventsLocation.models.User;
-import com.genie3.eventsLocation.models.UserPasswordUpdate;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.entities.User;
+import com.genie3.eventsLocation.entities.UserPasswordUpdate;
 
 import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
@@ -29,9 +29,9 @@ public class AuthResource {
 
         try {
 
-            User user1 = Dao.getUserDao().getWithPseudo(user.getPseudo());
+            User user1 = DaoFactory.getUserDao().getWithPseudo(user.getPseudo());
 
-            Dao.getUserDao().authenticate(user.getPassword(), user1.getPassword());
+            DaoFactory.getUserDao().authenticate(user.getPassword(), user1.getPassword());
             // Generate token
             String token = TokenSecurity.generateJwtToken(String.valueOf(user1.getId()));
             user1.setToken(token);
@@ -69,7 +69,7 @@ public class AuthResource {
         try {
             user.setRole("user");
             if(!DB.ExistPseudo(user.getPseudo())){
-                User user1 = Dao.getUserDao().create(user,"user");
+                User user1 = DaoFactory.getUserDao().create(user,"user");
                 return Response.status(Response.Status.CREATED).entity(user1).build();
             }else {
                 Error error = new Error("This pseudo already exist");
@@ -114,11 +114,11 @@ public class AuthResource {
                 ).build();
             }
 
-            User user1 = Dao.getUserDao().getWithPseudo(pseudo);
+            User user1 = DaoFactory.getUserDao().getWithPseudo(pseudo);
 
-            Dao.getUserDao().authenticate(user.getActualPassword(), user1.getPassword());
+            DaoFactory.getUserDao().authenticate(user.getActualPassword(), user1.getPassword());
 
-            Dao.getUserDao().updatePassord(user1,user.getNewPassword());
+            DaoFactory.getUserDao().updatePassord(user1,user.getNewPassword());
             return Response.status(Response.Status.OK).build();
 
         }catch (DaoException.NotFoundException ex){

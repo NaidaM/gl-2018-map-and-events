@@ -1,8 +1,7 @@
 package com.genie3.eventsLocation.validators;
 
 import com.genie3.eventsLocation.constraints.AttemptAuthUser;
-import com.genie3.eventsLocation.constraints.ValidPassword;
-import com.genie3.eventsLocation.models.User;
+import com.genie3.eventsLocation.entities.User;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
