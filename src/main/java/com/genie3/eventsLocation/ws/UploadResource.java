@@ -1,6 +1,8 @@
 package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.DaoFactory;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -33,6 +35,20 @@ public class UploadResource {
     }
 
 
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/photo/{id}")
+	public Response getPlaces(@PathParam("id") String placeId) {
+		try {
+			List<String> p = DaoFactory.getPlaceDao().getPhoto(placeId);
+            return Response.status(Response.Status.OK).entity(p).build();
+		} catch (DaoInternalError e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(new Error(e.getMessage()))
+                    .build();
+		}
+
+	}
     @GET
     @Path("/download")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

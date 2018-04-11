@@ -86,6 +86,8 @@ public class MapResource {
 		}
 
 	}
+	
+	
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

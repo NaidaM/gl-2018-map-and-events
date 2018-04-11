@@ -14,5 +14,10 @@ public class PlaceDaoImpl extends CrudImpl<Place> implements PlaceDao {
 		return DB.getPlaces(mapId);
 	}
 
+	public List<String> getPhoto(String placeId) throws DaoInternalError {
+		
+		return DB.getPhoto(placeId);
+	}
+
 }
 
