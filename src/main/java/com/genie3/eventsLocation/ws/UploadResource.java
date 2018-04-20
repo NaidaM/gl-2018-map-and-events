@@ -1,8 +1,6 @@
 package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.DaoFactory;
-import com.genie3.eventsLocation.entities.Error;
-import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;

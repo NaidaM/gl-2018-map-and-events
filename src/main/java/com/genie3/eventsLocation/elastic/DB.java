@@ -391,7 +391,7 @@ public final class DB {
 				eventMap.setName((String) map.get("name"));
 				eventMap.setDescription((String) map.get("description"));
 				eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
-
+				
 				User u = new User();
 				Map<String, String> mapuser = (Map<String, String>) map.get("user");
 				u.setId(mapuser.get("id"));
