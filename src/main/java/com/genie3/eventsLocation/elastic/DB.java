@@ -393,6 +393,21 @@ public final class DB {
 				u.setPseudo((mapuser.get("pseudo")));
 				u.setMaps(null);
 				eventMap.setUser(u);
+				
+				ArrayList<String> tags =  (ArrayList<String>) map.get("tags");
+				ArrayList<String> friends =  (ArrayList<String>) map.get("friends");
+				ArrayList<Tag> tagsList = new ArrayList<Tag>();
+				ArrayList<Friend> friendList = new ArrayList<Friend>();
+				for (int t = 0; t<tags.size();t++){
+					Tag tag = new Tag(tags.get(t));
+					tagsList.add(tag);
+				}
+				for (int j = 0; j<friends.size();j++){
+					Friend friend = new Friend(friends.get(j));
+					friendList.add(friend);
+				}
+				eventMap.setTags(tagsList);
+				eventMap.setFriends(friendList);
 
 
 				return (T) eventMap;
