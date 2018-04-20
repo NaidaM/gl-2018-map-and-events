@@ -608,66 +608,6 @@ public final class DB {
 		return BCrypt.hashpw(password, BCrypt.gensalt(15));
 	}
 	
-	//search a map using the query qb
-	public static SearchHit[] MapSearch(QueryBuilder qb) {
-		TransportClient cl = getClient();
-		SearchResponse res= cl.prepareSearch(mapIndex)
-				.setTypes(mapIndex)
-				.setQuery(qb)
-				.get();
-
-		return res.getHits().getHits();
-	}
-
-	//return map with places with tags search
-	public SearchHit[] searchPublicMapTags(String[] search) {
-		TransportClient cl= getClient();
-		
-		BoolQueryBuilder qb= QueryBuilders.boolQuery()
-				.minimumShouldMatch(1);
-		for(String s : search) {
-			qb.should(QueryBuilders.termQuery("tags", s));
-		}
-		
-		SearchResponse res= cl.prepareSearch(placeIndex)
-				.setTypes(placeIndex)
-				.setQuery(qb)
-				.get();
-		
-		SearchHit[] tab = res.getHits().getHits();
-		String[] tabid= new String[tab.length];
-
-		for(int i=0; i<tab.length; i++) {
-			tabid[i]= tab[i].getId();
-		}
-
-		return MapSearch(queryMapID(tabid, false));
-	}
-
-	// return query for map with id,
-	// if priv is true search private and public map else only public map
-	public QueryBuilder queryMapID(String[] id, boolean priv) {
-		BoolQueryBuilder qb= QueryBuilders.boolQuery();
-
-		if(!priv)
-			qb.mustNot(QueryBuilders.termQuery("isPrivate", false));
-		qb.should(QueryBuilders.idsQuery(mapIndex).addIds(id))
-		.minimumShouldMatch(1);
-		
-		return qb;
-	}
-
-	//search a map using the query qb
-	public static SearchHit[] mapSearch(QueryBuilder qb) {
-		TransportClient cl = getClient();
-		SearchResponse res= cl.prepareSearch(mapIndex)
-				.setTypes(mapIndex)
-				.setQuery(qb)
-				.get();
-
-		return res.getHits().getHits();
-	}
-
 	// search public map by using it tags if there is no tags return all public map
 	@SuppressWarnings({"unchecked"})
 	public static ArrayList<EventMap> searchMapTags(String[] tagsSearch) throws NotFoundException {
