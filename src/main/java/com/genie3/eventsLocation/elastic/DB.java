@@ -1,10 +1,17 @@
 package com.genie3.eventsLocation.elastic;
 
-import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
-import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
-import com.genie3.eventsLocation.entities.*;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -17,7 +24,9 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.IndexNotFoundException;
-import org.elasticsearch.index.query.*;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.rest.RestStatus;
@@ -26,17 +35,14 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
+import com.genie3.eventsLocation.entities.EventMap;
+import com.genie3.eventsLocation.entities.Friend;
+import com.genie3.eventsLocation.entities.Place;
+import com.genie3.eventsLocation.entities.Tag;
+import com.genie3.eventsLocation.entities.User;
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
 
 //import java.util.concurrent.ExecutionException;
 
@@ -272,7 +278,6 @@ public final class DB {
 		.field("isPrivate", Boolean.valueOf(map.getIsPrivate()))
 		.field("tags", tags)
 		.field("friends", friends)
-		.field("updated_at", projectDateTime())
 
 		.endObject();
 
