@@ -175,6 +175,17 @@ public final class DB {
 		}
 
 	}
+	
+	public static boolean deletePhoto(String name) {
+		TransportClient cl = getClient();
+		BulkByScrollResponse response = DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
+			    .filter(QueryBuilders.matchQuery("photo", name)) 
+			    .source(photoIndex)                                  
+			    .get();                                             
+			long deleted = response.getDeleted();
+			
+			return(deleted > 0);
+	}
 
 	@SuppressWarnings({"unchecked"})
 
@@ -391,7 +402,7 @@ public final class DB {
 				eventMap.setName((String) map.get("name"));
 				eventMap.setDescription((String) map.get("description"));
 				eventMap.setVisibility((String.valueOf(map.get("isPrivate"))));
-
+				
 				User u = new User();
 				Map<String, String> mapuser = (Map<String, String>) map.get("user");
 				u.setId(mapuser.get("id"));
