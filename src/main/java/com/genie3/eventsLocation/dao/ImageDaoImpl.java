@@ -1,6 +1,16 @@
 package com.genie3.eventsLocation.dao;
 
-import com.genie3.eventsLocation.elastic.DB;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.NumberFormat;
+import java.util.Iterator;
+import java.util.Random;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -10,11 +20,8 @@ import javax.imageio.stream.ImageOutputStream;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.text.NumberFormat;
-import java.util.Iterator;
-import java.util.Random;
+
+import com.genie3.eventsLocation.elastic.DB;
 
 
 
@@ -29,7 +36,10 @@ public class ImageDaoImpl implements ImageDao {
             int read = 0;
             byte[] bytes = new byte[1024];
             Random rd = new Random();
-            String path = DB.projectDateTime()+rd.nextInt(nombre)+".jpg";
+            String path = (DB.projectDateTime()+rd.nextInt(nombre)).replaceAll("\\.", "");
+            path= path.replaceAll(":", "")+".jpg";
+
+
             OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +path));
             ByteArrayOutputStream bao = new ByteArrayOutputStream();           
             while ((read = fileInputStream.read(bytes)) != -1) {
@@ -53,6 +63,7 @@ public class ImageDaoImpl implements ImageDao {
             DB.addPhoto(path, Idplace);
         } catch (IOException e)
         {
+        	e.printStackTrace();
             throw new WebApplicationException("Error while uploading file. Please try again !!");
         }catch (Exception e)
         {
