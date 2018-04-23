@@ -1,6 +1,9 @@
 package com.genie3.eventsLocation.ws;
 
 import com.genie3.eventsLocation.dao.DaoFactory;
+import com.genie3.eventsLocation.entities.Error;
+import com.genie3.eventsLocation.exception.DaoException;
+
 import org.glassfish.jersey.media.multipart.BodyPartEntity;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -49,7 +52,19 @@ public class UploadResource {
         
         }
         
-
+    @DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/delete/{photo}")
+	public Response delete(@PathParam("photo") String photo) {
+    	
+			if(DaoFactory.getImageDAO().deletePhoto(photo)){
+				return Response.status(Response.Status.OK).build();
+			}else {
+				return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			}	
+		}
+    
     @GET
     @Path("/date")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)

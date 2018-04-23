@@ -175,6 +175,17 @@ public final class DB {
 		}
 
 	}
+	
+	public static boolean deletePhoto(String name) {
+		TransportClient cl = getClient();
+		BulkByScrollResponse response = DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
+			    .filter(QueryBuilders.matchQuery("photo", name)) 
+			    .source(photoIndex)                                  
+			    .get();                                             
+			long deleted = response.getDeleted();
+			
+			return(deleted > 0);
+	}
 
 	@SuppressWarnings({"unchecked"})
 

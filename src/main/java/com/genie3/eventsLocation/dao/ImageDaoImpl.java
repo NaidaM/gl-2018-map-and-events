@@ -81,4 +81,21 @@ public class ImageDaoImpl implements ImageDao {
         return response;
     }
 
+	public boolean deletePhoto(String photo) {	
+		String path = UPLOAD_PATH+ photo;
+		try {
+			if(DB.deletePhoto(photo)) {
+				File file = new File(path);
+				if(file.delete()) {
+					return true;
+				}else
+					return false;
+			}else
+				return false;
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 }

@@ -7,4 +7,5 @@ public interface ImageDao {
 
     Response  upload(InputStream fileInputStream,String filename,String Idplace);
 	Response download(String fileName);
+	boolean deletePhoto(String photo);
 }
