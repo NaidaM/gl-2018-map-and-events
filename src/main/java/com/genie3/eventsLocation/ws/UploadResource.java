@@ -16,11 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-@Path("/upload")
+@Path("/image")
 public class UploadResource {
     
 	@POST
-    @Path("/image/{id}")
+    @Path("/upload/{id}")
     @Consumes({MediaType.MULTIPART_FORM_DATA})
     public Response uploadImage(@PathParam("id") String placeId,
                                 @FormDataParam("file") List<FormDataBodyPart> bodyParts

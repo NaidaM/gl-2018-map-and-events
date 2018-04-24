@@ -89,7 +89,7 @@ public class MapResource {
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@Path("{id}/photo/")
+	@Path("place/{id}/pictures/")
 	public Response getPhoto(@PathParam("id") String placeId) {
 		try {
 			List<String> p = DaoFactory.getPlaceDao().getPhoto(placeId);
