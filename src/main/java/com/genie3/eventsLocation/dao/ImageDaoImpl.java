@@ -93,7 +93,8 @@ public class ImageDaoImpl implements ImageDao {
     }
 
 	public boolean deletePhoto(String photo) {	
-		String path = UPLOAD_PATH+ photo;
+		//String path = UPLOAD_PATH+ photo;
+		String path = "Upload\\"+ photo;
 		try {
 			if(DB.deletePhoto(photo)) {
 				File file = new File(path);
