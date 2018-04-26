@@ -262,8 +262,6 @@ public final class DB {
 			    .startObject()
 			        .field("name", place.getName())
 			        .field("description", place.getDescription())
-			        .field("latitude", place.getLatitude())
-			        .field("longitude", place.getLongitude())
 			    .endObject();
 
 		return builder;

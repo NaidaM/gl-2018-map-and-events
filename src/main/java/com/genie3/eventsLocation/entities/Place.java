@@ -1,14 +1,13 @@
 package com.genie3.eventsLocation.entities;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -22,11 +21,11 @@ public  class Place {
     @NotBlank(message = "Provide a name for a place")
     private String name;
 
-    @NotNull(message = "Latitude must be provide")
+
     @Pattern(regexp = "^[0-9]+(.[0-9]+)?$+",message = "Latitude must be a number")
     private String latitude;
 
-    @NotNull(message = "Longitude must be provide")
+
     @Pattern(regexp = "^[0-9]+(.[0-9]+)?$",message = "Longitude must be a number")
     private String longitude;
 
