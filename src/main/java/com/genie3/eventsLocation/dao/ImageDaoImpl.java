@@ -39,8 +39,6 @@ public class ImageDaoImpl implements ImageDao {
             Random rd = new Random();
             String path = (DB.projectDateTime()+rd.nextInt(nombre)).replaceAll("\\.", "");
             path= path.replaceAll(":", "")+".jpg";
-
-
             OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +path));
             ByteArrayOutputStream bao = new ByteArrayOutputStream();           
             while ((read = fileInputStream.read(bytes)) != -1) {
@@ -57,15 +55,17 @@ public class ImageDaoImpl implements ImageDao {
             writer.setOutput(ios);
             ImageWriteParam param = writer.getDefaultWriteParam();
             param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-            if(b<1048576)
-            	param.setCompressionQuality(1.0f);
-            else
+            if(b<1048576) {
+            	 writer.write(null, new IIOImage(image, null, null), null);
+                 System.out.println("--- name: " + filename);
+                 out.flush();
+                 out.close();
+            }else {
             	param.setCompressionQuality(0.70f);
-            writer.write(null, new IIOImage(image, null, null), param);
-            System.out.println("--- name: " + filename);
-            
-            out.flush();
-            out.close();
+            	writer.write(null, new IIOImage(image, null, null), param);
+            	System.out.println("--- name: " + filename);            
+            	out.flush();
+            	out.close();}
             DB.addPhoto(path, Idplace);
         } catch (IOException e)
         {
