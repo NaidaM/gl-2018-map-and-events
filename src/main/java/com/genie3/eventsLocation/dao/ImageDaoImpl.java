@@ -1,5 +1,6 @@
 package com.genie3.eventsLocation.dao;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -39,41 +40,33 @@ public class ImageDaoImpl implements ImageDao {
             Random rd = new Random();
             String path = (DB.projectDateTime()+rd.nextInt(nombre)).replaceAll("\\.", "");
             path= path.replaceAll(":", "")+".jpg";
-            
+            OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +path));
             ByteArrayOutputStream bao = new ByteArrayOutputStream();           
             while ((read = fileInputStream.read(bytes)) != -1) {
                 bao.write(bytes, 0, read);
                 b++;
             }
             b*=1024;
-            if(b<1048576) {
-            	if(filename.contains("png")) {
-            		path = (DB.projectDateTime()+rd.nextInt(nombre)).replaceAll("\\.", "");
-            		path= path.replaceAll(":", "")+".png";
-            	}
-            	OutputStream out = new FileOutputStream(new File(path));	 
-            	bao.writeTo(out);
-            	System.out.println("--- name: " + filename+" normale upload");   
-            	out.flush();
-                out.close();
-                DB.addPhoto(path, Idplace);
-            }else {
-            	OutputStream out = new FileOutputStream(new File(UPLOAD_PATH +path));
-            	byte[] data = bao.toByteArray();
-            	InputStream in  = new ByteArrayInputStream(data);
-            	BufferedImage image = ImageIO.read(in);
-            	Iterator<ImageWriter> writers=  ImageIO.getImageWritersByFormatName("jpg");
-            	ImageWriter writer = (ImageWriter) writers.next();            
-            	ImageOutputStream ios = ImageIO.createImageOutputStream(out);
-            	writer.setOutput(ios);
-            	ImageWriteParam param = writer.getDefaultWriteParam();
-            	param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            byte[] data = bao.toByteArray();
+            InputStream in  = new ByteArrayInputStream(data);
+			BufferedImage image = ImageIO.read(in);
+			BufferedImage newBufferedImage = new BufferedImage(image.getWidth(),
+					image.getHeight(), BufferedImage.TYPE_INT_RGB);
+			newBufferedImage.createGraphics().drawImage(image, 0, 0, Color.WHITE, null);
+			Iterator<ImageWriter> writers=  ImageIO.getImageWritersByFormatName("jpg");
+            ImageWriter writer = (ImageWriter) writers.next();            
+            ImageOutputStream ios = ImageIO.createImageOutputStream(out);
+            writer.setOutput(ios);
+            ImageWriteParam param = writer.getDefaultWriteParam();
+            param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+            if(b<1048576)
+            	param.setCompressionQuality(1.0f);
+            else
             	param.setCompressionQuality(0.70f);
-            	writer.write(null, new IIOImage(image, null, null), param);
-            	System.out.println("--- name: " + filename);            
-            	out.flush();
-            	out.close();
-            	DB.addPhoto(path, Idplace);}
+            writer.write(null, new IIOImage(newBufferedImage, null, null), param);
+            out.flush();
+            out.close();
+            DB.addPhoto(path, Idplace);
         } catch (IOException e)
         {
         	e.printStackTrace();
@@ -82,7 +75,7 @@ public class ImageDaoImpl implements ImageDao {
         {
             throw new WebApplicationException("file is not image. Please try again !!");
         }
-        return Response.ok(filename + " uploaded successfully !!").build();           
+        return Response.ok(filename + " uploaded successfully !!").build();
 	}
 
 	public Response download(String fileName) {     
@@ -95,6 +88,7 @@ public class ImageDaoImpl implements ImageDao {
 			      ResponseBuilder builder = Response.ok(file);
 			      builder.header("Content-Disposition", "attachment; filename=" + file.getName());
 			      response = builder.build();
+		
 			    } else {		
 			      response = Response.status(404).
 			      entity("FILE NOT FOUND: " + fileLocation).
