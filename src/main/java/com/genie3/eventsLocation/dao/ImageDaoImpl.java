@@ -58,7 +58,7 @@ public class ImageDaoImpl implements ImageDao {
             ImageWriteParam param = writer.getDefaultWriteParam();
             param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             if(b<1048576)
-            	param.setCompressionQuality(0.95f);
+            	param.setCompressionQuality(1.0f);
             else
             	param.setCompressionQuality(0.70f);
             writer.write(null, new IIOImage(image, null, null), param);

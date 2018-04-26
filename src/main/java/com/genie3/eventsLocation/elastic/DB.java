@@ -182,8 +182,7 @@ public final class DB {
 			    .filter(QueryBuilders.matchQuery("photo", name)) 
 			    .source(photoIndex)                                  
 			    .get();                                             
-			long deleted = response.getDeleted();
-			
+			long deleted = response.getDeleted();		
 			return(deleted > 0);
 	}
 
