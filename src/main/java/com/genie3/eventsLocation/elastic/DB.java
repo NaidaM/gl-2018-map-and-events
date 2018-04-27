@@ -1,17 +1,9 @@
 package com.genie3.eventsLocation.elastic;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
-
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.genie3.eventsLocation.entities.*;
+import com.genie3.eventsLocation.exception.DaoException;
+import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
+import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -35,14 +27,17 @@ import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import org.mindrot.jbcrypt.BCrypt;
 
-import com.genie3.eventsLocation.entities.EventMap;
-import com.genie3.eventsLocation.entities.Friend;
-import com.genie3.eventsLocation.entities.Place;
-import com.genie3.eventsLocation.entities.Tag;
-import com.genie3.eventsLocation.entities.User;
-import com.genie3.eventsLocation.exception.DaoException;
-import com.genie3.eventsLocation.exception.DaoException.DaoInternalError;
-import com.genie3.eventsLocation.exception.DaoException.NotFoundException;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 //import java.util.concurrent.ExecutionException;
 
@@ -178,12 +173,37 @@ public final class DB {
 	
 	public static boolean deletePhoto(String name) {
 		TransportClient cl = getClient();
-		BulkByScrollResponse response = DeleteByQueryAction.INSTANCE.newRequestBuilder(cl)
-			    .filter(QueryBuilders.matchQuery("photo", name)) 
-			    .source(photoIndex)                                  
-			    .get();                                             
-			long deleted = response.getDeleted();		
-			return(deleted > 0);
+
+		try {
+
+			SearchResponse res = cl.prepareSearch(photoIndex)
+					.setTypes(photoIndex)
+					.setQuery(QueryBuilders.matchQuery("photo",name))
+					.get();
+			SearchHit[] searchHit= res.getHits().getHits();
+
+
+
+			if(searchHit.length !=0 ) {
+
+				for(int i=0; i<searchHit.length; i++) {
+					Map<String, Object> map = searchHit[i].getSourceAsMap();
+					if(map.get("photo").equals(name)){
+						DeleteResponse del = cl.prepareDelete(photoIndex,photoIndex,searchHit[i].getId()).get();
+						break;
+					}
+
+				}
+			}
+
+			return true;
+
+		}catch (Exception ex){
+			ex.printStackTrace();
+			return false;
+		}
+
+
 	}
 
 	@SuppressWarnings({"unchecked"})
